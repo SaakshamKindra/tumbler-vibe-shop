@@ -111,17 +111,17 @@ const ProductsPage = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-brand-cream">
       <Navbar />
       
       <main className="flex-grow pt-20">
         {/* Banner/Header for the collection */}
-        <div className="bg-gray-50 py-8">
+        <div className="bg-brand-beige py-8">
           <div className="container mx-auto px-4">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-brand-brown">
               Our Collection
             </h1>
-            <p className="text-gray-600">
+            <p className="text-brand-brown opacity-80">
               Discover our range of premium tumblers designed to keep your drinks at the perfect temperature.
             </p>
           </div>
@@ -134,7 +134,7 @@ const ProductsPage = () => {
             <Button 
               variant="outline" 
               onClick={() => setFilterMobileOpen(true)}
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 border-brand-terracotta text-brand-brown"
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filter Products
@@ -155,7 +155,7 @@ const ProductsPage = () => {
             {/* Filters - Mobile Drawer */}
             {filterMobileOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
-                <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-white shadow-lg overflow-auto animate-fade-in">
+                <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-brand-cream shadow-lg overflow-auto animate-fade-in">
                   <ProductFilters 
                     onFilterChange={handleFilterChange}
                     categories={categories}
@@ -171,12 +171,12 @@ const ProductsPage = () => {
             {/* Products Grid */}
             <div className="flex-grow">
               <div className="mb-6 flex justify-between items-center">
-                <p className="text-gray-600">
+                <p className="text-brand-brown opacity-80">
                   Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 hidden sm:inline">Sort by:</span>
-                  <select className="border rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-teal">
+                  <span className="text-sm text-brand-brown opacity-80 hidden sm:inline">Sort by:</span>
+                  <select className="border rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-terracotta text-brand-brown border-brand-terracotta bg-brand-cream">
                     <option>Featured</option>
                     <option>Price: Low to High</option>
                     <option>Price: High to Low</option>
