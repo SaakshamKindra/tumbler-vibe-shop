@@ -1,191 +1,116 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-brand-dark text-white pt-12 pb-6">
-      <div className="container mx-auto px-4">
-        {/* Newsletter Section */}
-        <div className="border-b border-gray-700 pb-8 mb-8">
-          <div className="max-w-xl mx-auto text-center">
-            <h4 className="text-2xl font-bold mb-2">Join our community</h4>
-            <p className="text-gray-300 mb-4">
-              Subscribe to get special offers, free giveaways, and amazing deals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Input 
-                type="email" 
-                placeholder="Your email address" 
-                className="bg-gray-800 border-gray-700 focus:border-brand-teal text-white"
-              />
-              <Button className="bg-brand-teal hover:bg-brand-teal/90 whitespace-nowrap">
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* Company Info */}
-          <div>
-            <h5 className="text-lg font-bold mb-4">VibeTumbler</h5>
-            <p className="text-gray-400 mb-4">
-              Creating premium drinkware that keeps your beverages at the perfect temperature while making a statement with our stylish designs.
+    <footer className="bg-gray-50 border-t border-gray-200">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Column */}
+          <div className="col-span-1">
+            <Link to="/" className="inline-block mb-4">
+              <h2 className="text-2xl font-bold text-brand-brown font-display">
+                <span className="text-brand-terracotta">ASA</span> artisans
+              </h2>
+            </Link>
+            <p className="text-gray-600 mb-4">
+              Elevate your hydration experience with our premium collection of artisanal tumblers, designed for both style and functionality.
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://facebook.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="text-gray-400 hover:text-brand-teal transition-colors"
-                aria-label="Facebook"
+                href="https://www.instagram.com/asaartisangifts?igsh=MW5sbjV4d21yazlqcA=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-brand-terracotta transition-colors"
+                aria-label="Follow us on Instagram"
               >
-                <Facebook size={20} />
-              </a>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="text-gray-400 hover:text-brand-teal transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-              </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="text-gray-400 hover:text-brand-teal transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter size={20} />
+                <Instagram className="h-5 w-5" />
               </a>
             </div>
           </div>
 
-          {/* Shop Links */}
-          <div>
-            <h5 className="text-lg font-bold mb-4">Shop</h5>
+          {/* Quick Links */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4 text-brand-brown">Shop</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/products" className="text-gray-400 hover:text-brand-teal transition-colors">
+                <Link to="/products" className="text-gray-600 hover:text-brand-terracotta transition-colors">
                   All Products
                 </Link>
               </li>
               <li>
-                <Link to="/products?category=tumblers" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Tumblers
-                </Link>
-              </li>
-              <li>
-                <Link to="/products?category=premium" className="text-gray-400 hover:text-brand-teal transition-colors">
+                <Link to="/products?category=Premium" className="text-gray-600 hover:text-brand-terracotta transition-colors">
                   Premium Collection
                 </Link>
               </li>
               <li>
-                <Link to="/products?category=kids" className="text-gray-400 hover:text-brand-teal transition-colors">
+                <Link to="/products?category=Tumblers" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  Tumblers
+                </Link>
+              </li>
+              <li>
+                <Link to="/products?category=Kids" className="text-gray-600 hover:text-brand-terracotta transition-colors">
                   Kids Collection
                 </Link>
               </li>
               <li>
-                <Link to="/products?category=specialty" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Specialty Tumblers
-                </Link>
-              </li>
-              <li>
-                <Link to="/products?tag=new" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  New Arrivals
+                <Link to="/products?category=Glass%20Tumblers" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  Glass Tumblers
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Customer Service */}
-          <div>
-            <h5 className="text-lg font-bold mb-4">Customer Service</h5>
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4 text-brand-brown">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/customer-service" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Contact Us
+                <Link to="/customer-service#shipping" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  Shipping Information
                 </Link>
               </li>
               <li>
-                <Link to="/customer-service#faq" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link to="/customer-service#shipping" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Shipping & Delivery
-                </Link>
-              </li>
-              <li>
-                <Link to="/customer-service#returns" className="text-gray-400 hover:text-brand-teal transition-colors">
+                <Link to="/customer-service#returns" className="text-gray-600 hover:text-brand-terracotta transition-colors">
                   Returns & Exchanges
                 </Link>
               </li>
               <li>
-                <Link to="/customer-service#warranty" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Warranty
+                <Link to="/customer-service#faq" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/customer-service#track" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Track Order
+                <Link to="/customer-service#contact" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  Contact Us
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Company */}
-          <div>
-            <h5 className="text-lg font-bold mb-4">Company</h5>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/about" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/sustainability" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Sustainability
-                </Link>
-              </li>
-              <li>
-                <Link to="/careers" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms-of-service" className="text-gray-400 hover:text-brand-teal transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <a href="mailto:info@vibetumbler.com" className="text-gray-400 hover:text-brand-teal transition-colors flex items-center gap-2">
-                  <Mail size={16} /> info@vibetumbler.com
-                </a>
-              </li>
+          {/* Contact Info */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4 text-brand-brown">Contact Us</h3>
+            <ul className="space-y-2 text-gray-600">
+              <li>Customer Service: ASA Artisans (7417862083)</li>
+              <li>Email: saakshamkindra@gmail.com</li>
+              <li>Hours: Monday - Friday, 9AM - 5PM IST</li>
             </ul>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="text-center text-gray-500 text-sm pt-6 border-t border-gray-800">
-          <p>© {new Date().getFullYear()} VibeTumbler. All rights reserved.</p>
-          <p className="mt-1">
-            Designed for optimal hydration and style.
-          </p>
+        <div className="border-t border-gray-200 mt-12 pt-8 text-center text-gray-500 text-sm">
+          <p>&copy; {new Date().getFullYear()} ASA artisans. All rights reserved.</p>
+          <div className="mt-2 space-x-4">
+            <Link to="/privacy-policy" className="hover:text-brand-terracotta transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms-of-service" className="hover:text-brand-terracotta transition-colors">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

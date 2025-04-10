@@ -5,7 +5,7 @@ export const products: Product[] = [
   {
     id: 1,
     name: "Arctic Explorer Tumbler",
-    price: 34.99,
+    price: 1400,
     description: "Keep your drinks ice cold for up to 24 hours or hot for up to 12 hours with our premium vacuum-insulated Arctic Explorer tumbler. Perfect for outdoor adventures or everyday use.",
     features: [
       "Double-wall vacuum insulation",
@@ -31,11 +31,11 @@ export const products: Product[] = [
       { name: "Arctic White", hex: "#F8FAFC", available: true }
     ],
     images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
+      "/lovable-uploads/5a7e70d9-2b15-4a5f-8316-c4ce15c95bf8.png",
+      "/lovable-uploads/2795299f-3085-4dc2-8073-92bc7b6db911.png",
+      "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png"
     ],
-    category: "Tumblers",
+    category: "Premium",
     tags: ["Outdoor", "Travel", "Bestseller", "Insulated"],
     isNew: false,
     bestSeller: true,
@@ -45,7 +45,7 @@ export const products: Product[] = [
   {
     id: 2,
     name: "Urban Commuter Tumbler",
-    price: 29.99,
+    price: 600,
     description: "Designed for the daily commuter, this sleek tumbler fits perfectly in most cup holders and keeps your morning coffee or tea at the ideal temperature during your commute.",
     features: [
       "Leak-proof flip lid",
@@ -70,9 +70,9 @@ export const products: Product[] = [
       { name: "Navy Blue", hex: "#1E3A8A", available: true }
     ],
     images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
+      "/lovable-uploads/682b13e5-fc99-44ee-ac08-3cf12b6fd6a0.png",
+      "/lovable-uploads/969ae606-a018-4743-8fb1-9f01eb1cde5c.png",
+      "/lovable-uploads/90727131-3103-40cd-91d9-1d1a6076f407.png"
     ],
     category: "Tumblers",
     tags: ["Commuter", "Office", "Travel"],
@@ -84,7 +84,7 @@ export const products: Product[] = [
   {
     id: 3,
     name: "Summit Series Tumbler",
-    price: 44.99,
+    price: 1400,
     description: "Our premium Summit Series tumbler is built for extreme conditions. Whether scaling mountains or braving the daily grind, this tumbler provides unparalleled temperature retention.",
     features: [
       "Premium triple-layer insulation",
@@ -110,9 +110,9 @@ export const products: Product[] = [
       { name: "Cobalt Blue", hex: "#1D4ED8", available: true }
     ],
     images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
+      "/lovable-uploads/2795299f-3085-4dc2-8073-92bc7b6db911.png",
+      "/lovable-uploads/5a7e70d9-2b15-4a5f-8316-c4ce15c95bf8.png",
+      "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png"
     ],
     category: "Premium",
     tags: ["Outdoor", "Extreme", "Premium", "New"],
@@ -124,7 +124,7 @@ export const products: Product[] = [
   {
     id: 4,
     name: "Kids Adventure Tumbler",
-    price: 24.99,
+    price: 500,
     description: "Designed for young explorers, our Kids Adventure Tumbler is durable, leak-proof, and perfectly sized for little hands. BPA-free and built to withstand drops and tumbles.",
     features: [
       "Kid-friendly size and design",
@@ -149,9 +149,10 @@ export const products: Product[] = [
       { name: "Lime Green", hex: "#65A30D", available: true }
     ],
     images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
+      "/lovable-uploads/026a47fb-97cc-4759-b6bc-cf15a4e40c46.png",
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
+      "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png",
+      "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png"
     ],
     category: "Kids",
     tags: ["Kids", "School", "Outdoor"],
@@ -163,7 +164,7 @@ export const products: Product[] = [
   {
     id: 5,
     name: "Coffee Enthusiast Tumbler",
-    price: 32.99,
+    price: 500,
     description: "Specially designed for coffee lovers, with a leak-proof lid that preserves aromas and a ceramic-coated interior that won't impart metallic flavors to your precious brew.",
     features: [
       "Ceramic interior coating",
@@ -188,11 +189,12 @@ export const products: Product[] = [
       { name: "Cinnamon Red", hex: "#B91C1C", available: true }
     ],
     images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
+      "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png",
+      "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png",
+      "/lovable-uploads/026a47fb-97cc-4759-b6bc-cf15a4e40c46.png"
     ],
-    category: "Specialty",
+    category: "Kids",
     tags: ["Coffee", "Hot Drinks", "Premium"],
     isNew: true,
     bestSeller: false,
@@ -202,7 +204,7 @@ export const products: Product[] = [
   {
     id: 6,
     name: "Slim Fit Tumbler",
-    price: 27.99,
+    price: 500,
     description: "Our slimmest profile tumbler designed to fit in any cup holder while still providing excellent insulation. Perfect for those who are always on the move.",
     features: [
       "Ultra-slim design",
@@ -227,16 +229,56 @@ export const products: Product[] = [
       { name: "Coral", hex: "#F87171", available: true }
     ],
     images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
+      "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png",
+      "/lovable-uploads/026a47fb-97cc-4759-b6bc-cf15a4e40c46.png",
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
+      "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png"
     ],
-    category: "Tumblers",
+    category: "Kids",
     tags: ["Travel", "Commuter", "Slimline"],
     isNew: false,
     bestSeller: true,
     rating: 4.4,
     inventory: 180
+  },
+  {
+    id: 7,
+    name: "Glass Tumbler with Bamboo Lid",
+    price: 800,
+    description: "Elegant glass tumbler with bamboo lid, perfect for eco-conscious consumers who prefer the purity of glass. The bamboo lid adds a natural touch while providing excellent insulation.",
+    features: [
+      "Premium borosilicate glass construction",
+      "Natural bamboo lid",
+      "Silicone sleeve for protection and grip",
+      "Wide mouth for easy cleaning",
+      "100% BPA-free materials",
+      "Dishwasher safe (glass part only)"
+    ],
+    specifications: {
+      capacity: "16 oz (473 ml)",
+      material: "Borosilicate Glass, Bamboo, Silicone",
+      dimensions: "3\" diameter x 6\" height",
+      weight: "0.7 lbs",
+      insulation: "Single-wall with insulating sleeve",
+      lidType: "Screw-on bamboo lid with drinking hole"
+    },
+    colors: [
+      { name: "Clear", hex: "#FFFFFF", available: true },
+      { name: "Blue Sleeve", hex: "#3B82F6", available: true },
+      { name: "Pink Sleeve", hex: "#EC4899", available: true },
+      { name: "Green Sleeve", hex: "#10B981", available: true }
+    ],
+    images: [
+      "/lovable-uploads/b9a90ec9-c2be-4358-9678-7685c06473aa.png",
+      "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png",
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png"
+    ],
+    category: "Glass Tumblers",
+    tags: ["Eco-friendly", "Glass", "New"],
+    isNew: true,
+    bestSeller: false,
+    rating: 4.7,
+    inventory: 100
   }
 ];
 

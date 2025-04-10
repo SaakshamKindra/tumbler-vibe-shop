@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, ArrowRight } from 'lucide-react';
+import AdCarousel from './AdCarousel';
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -71,40 +72,14 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Column: Hero Image */}
+          {/* Right Column: Ad Carousel */}
           <div className="lg:w-1/2 relative">
             <div 
               className={`relative transition-all duration-1000 delay-300 ease-out transform ${
                 isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
               }`}
             >
-              {/* Main Product Image */}
-              <div className="relative bg-white p-6 rounded-2xl shadow-lg shine-effect transform rotate-3 z-10">
-                <img
-                  src="/placeholder.svg"
-                  alt="Premium VibeTumbler Collection"
-                  className="w-full h-auto rounded-lg"
-                />
-                <div className="absolute -bottom-3 -right-3 bg-brand-teal text-white text-sm font-bold px-3 py-1 rounded-full">
-                  BEST SELLER
-                </div>
-              </div>
-
-              {/* Decorative Elements */}
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white p-3 rounded-lg shadow-md rotate-6 z-0 transform -rotate-6 opacity-80">
-                <img
-                  src="/placeholder.svg"
-                  alt="Tumbler Feature"
-                  className="w-full h-auto rounded"
-                />
-              </div>
-              <div className="absolute -top-8 -right-8 w-32 h-32 bg-white p-3 rounded-lg shadow-md z-0 transform rotate-12 opacity-80">
-                <img
-                  src="/placeholder.svg"
-                  alt="Tumbler Feature"
-                  className="w-full h-auto rounded"
-                />
-              </div>
+              <AdCarousel />
             </div>
           </div>
         </div>

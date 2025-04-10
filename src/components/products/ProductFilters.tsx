@@ -195,8 +195,8 @@ const ProductFilters = ({
                 className="my-4"
               />
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">${priceRange[0]}</span>
-                <span className="text-sm text-gray-600">${priceRange[1]}</span>
+                <span className="text-sm text-gray-600">₹{priceRange[0] * 20}</span>
+                <span className="text-sm text-gray-600">₹{priceRange[1] * 20}</span>
               </div>
             </div>
           </AccordionContent>

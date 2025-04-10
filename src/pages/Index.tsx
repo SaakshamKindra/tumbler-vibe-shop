@@ -30,7 +30,7 @@ const Index = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2">Free Shipping</h3>
                 <p className="text-gray-600 text-sm">
-                  On all orders over $50 within the United States.
+                  On all orders over ₹1,000 within India.
                 </p>
               </div>
               

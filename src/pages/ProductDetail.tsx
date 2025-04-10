@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -140,7 +139,7 @@ const ProductDetail = () => {
               {/* Price & Rating */}
               <div className="flex items-center justify-between mb-6">
                 <span className="text-2xl font-bold text-gray-900">
-                  ${product.price.toFixed(2)}
+                  ₹{product.price.toFixed(2)}
                 </span>
                 
                 <div className="flex items-center">
@@ -202,7 +201,7 @@ const ProductDetail = () => {
                 </div>
                 
                 <div className="sm:w-2/3">
-                  <h3 className="font-semibold mb-2">Total: ${(product.price * quantity).toFixed(2)}</h3>
+                  <h3 className="font-semibold mb-2">Total: ₹{(product.price * quantity).toFixed(2)}</h3>
                   <div className="flex gap-2">
                     <Button
                       onClick={handleAddToCart}
@@ -232,7 +231,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Truck className="h-4 w-4 text-gray-500 mr-2" />
-                  <span>Free shipping on orders over $50</span>
+                  <span>Free shipping on orders over ₹1000</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <CircleCheck className="h-4 w-4 text-gray-500 mr-2" />
@@ -293,8 +292,8 @@ const ProductDetail = () => {
                     <div>
                       <h4 className="font-semibold mb-1">Shipping Information</h4>
                       <p className="text-gray-600 text-sm">
-                        We offer free standard shipping on all orders over $50. Orders under $50 have a flat shipping rate of $5.99. 
-                        Standard shipping typically takes 3-5 business days. Express shipping is available for $12.99 and takes 1-2 business days.
+                        We offer free standard shipping on all orders over ₹50. Orders under ₹50 have a flat shipping rate of ₹5.99. 
+                        Standard shipping typically takes 3-5 business days. Express shipping is available for ₹12.99 and takes 1-2 business days.
                       </p>
                     </div>
                     
@@ -337,7 +336,7 @@ const ProductDetail = () => {
                       />
                       <h3 className="font-semibold text-gray-800 mb-1">{relatedProduct.name}</h3>
                       <div className="flex items-center justify-between">
-                        <span className="font-bold">${relatedProduct.price.toFixed(2)}</span>
+                        <span className="font-bold">₹{relatedProduct.price.toFixed(2)}</span>
                         <div className="flex items-center">
                           <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                           <span className="text-sm text-gray-500 ml-1">{relatedProduct.rating.toFixed(1)}</span>
