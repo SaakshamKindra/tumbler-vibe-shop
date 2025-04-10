@@ -49,7 +49,7 @@ const HeroSection = () => {
               Discover our collection of premium tumblers designed to keep your drinks at the perfect temperature while making a statement.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button asChild size="lg" className="bg-brand-teal hover:bg-brand-teal/90 text-white">
+              <Button asChild size="lg" className="bg-brand-terracotta hover:bg-brand-terracotta/90 text-white">
                 <Link to="/products">
                   Shop Now <ChevronRight className="ml-2 h-5 w-5" />
                 </Link>

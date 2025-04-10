@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -18,28 +17,87 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { User, Package, Heart, CreditCard, Settings, Mail, Lock } from 'lucide-react';
 import { toast } from "sonner";
 
 const AccountPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      setFirstName(parsedData.firstName);
+      setLastName(parsedData.lastName);
+      setEmail(parsedData.email);
+      setIsLoggedIn(true);
+    }
+  }, []);
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login
-    toast.success("Successfully logged in!");
-    setIsLoggedIn(true);
+    const emailInput = (document.getElementById('email') as HTMLInputElement).value;
+    const passwordInput = (document.getElementById('password') as HTMLInputElement).value;
+    
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      if (parsedData.email === emailInput) {
+        toast.success("Successfully logged in!");
+        setFirstName(parsedData.firstName);
+        setLastName(parsedData.lastName);
+        setEmail(parsedData.email);
+        setIsLoggedIn(true);
+      } else {
+        toast.error("Invalid email or password");
+      }
+    } else {
+      toast.error("No account found. Please sign up.");
+    }
   };
   
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate signup
+    const firstNameInput = (document.getElementById('first-name') as HTMLInputElement).value;
+    const lastNameInput = (document.getElementById('last-name') as HTMLInputElement).value;
+    const emailInput = (document.getElementById('signup-email') as HTMLInputElement).value;
+    const passwordInput = (document.getElementById('signup-password') as HTMLInputElement).value;
+    const confirmPasswordInput = (document.getElementById('confirm-password') as HTMLInputElement).value;
+    
+    if (passwordInput !== confirmPasswordInput) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+    
+    const userData = {
+      firstName: firstNameInput,
+      lastName: lastNameInput,
+      email: emailInput,
+    };
+    
+    localStorage.setItem('userData', JSON.stringify(userData));
+    
+    setFirstName(firstNameInput);
+    setLastName(lastNameInput);
+    setEmail(emailInput);
+    
     toast.success("Account created successfully!");
     setIsLoggedIn(true);
+    
+    setShowWelcomeDialog(true);
   };
   
   const handleSignout = () => {
-    // Simulate logout
     toast.info("You have been logged out");
     setIsLoggedIn(false);
   };
@@ -56,15 +114,14 @@ const AccountPage = () => {
           
           {isLoggedIn ? (
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-              {/* Sidebar */}
               <div className="lg:col-span-1">
                 <Card>
                   <CardHeader className="text-center">
                     <div className="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-2 flex items-center justify-center">
                       <User className="h-10 w-10 text-gray-500" />
                     </div>
-                    <CardTitle>John Doe</CardTitle>
-                    <CardDescription>john.doe@example.com</CardDescription>
+                    <CardTitle>{firstName} {lastName}</CardTitle>
+                    <CardDescription>{email}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Tabs defaultValue="orders" className="w-full">
@@ -94,7 +151,6 @@ const AccountPage = () => {
                 </Card>
               </div>
               
-              {/* Main Content */}
               <div className="lg:col-span-3">
                 <Tabs defaultValue="orders">
                   <TabsContent value="orders">
@@ -253,13 +309,13 @@ const AccountPage = () => {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label htmlFor="password">Password</Label>
-                              <a href="#" className="text-xs text-brand-teal hover:underline">
+                              <a href="#" className="text-xs text-brand-terracotta hover:underline">
                                 Forgot password?
                               </a>
                             </div>
                             <Input id="password" type="password" required />
                           </div>
-                          <Button type="submit" className="w-full bg-brand-teal hover:bg-brand-teal/90">
+                          <Button type="submit" className="w-full bg-brand-terracotta hover:bg-brand-terracotta/90">
                             Login
                           </Button>
                         </div>
@@ -305,12 +361,12 @@ const AccountPage = () => {
                             <input type="checkbox" id="terms" className="rounded" required />
                             <label htmlFor="terms" className="text-sm text-gray-500">
                               I agree to the{' '}
-                              <a href="/terms-of-service" className="text-brand-teal hover:underline">Terms of Service</a>
+                              <a href="/terms-of-service" className="text-brand-terracotta hover:underline">Terms of Service</a>
                               {' '}and{' '}
-                              <a href="/privacy-policy" className="text-brand-teal hover:underline">Privacy Policy</a>
+                              <a href="/privacy-policy" className="text-brand-terracotta hover:underline">Privacy Policy</a>
                             </label>
                           </div>
-                          <Button type="submit" className="w-full bg-brand-teal hover:bg-brand-teal/90">
+                          <Button type="submit" className="w-full bg-brand-terracotta hover:bg-brand-terracotta/90">
                             Create Account
                           </Button>
                         </div>
@@ -325,6 +381,33 @@ const AccountPage = () => {
       </main>
       
       <Footer />
+      
+      <Dialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog}>
+        <DialogContent className="bg-gradient-to-br from-brand-terracotta/20 to-brand-blue/10 border-4 border-white/70">
+          <DialogHeader>
+            <DialogTitle className="text-3xl font-display text-center mb-2">
+              <span className="bg-gradient-to-r from-brand-terracotta to-brand-blue text-gradient">
+                Welcome, {firstName}!
+              </span>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center py-6">
+            <p className="text-xl text-brand-brown mb-4">
+              Thanks for joining ASA artisans!
+            </p>
+            <p className="text-brand-brown/80 mb-6">
+              We're thrilled to have you as part of our community. 
+              Explore our collection and find your perfect tumbler.
+            </p>
+            <Button 
+              onClick={() => setShowWelcomeDialog(false)}
+              className="bg-brand-terracotta hover:bg-brand-terracotta/90"
+            >
+              Start Shopping
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

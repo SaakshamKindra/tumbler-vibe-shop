@@ -4,80 +4,69 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
 } from "@/components/ui/carousel";
 
 const AdCarousel = () => {
-  const [autoplay, setAutoplay] = useState(true);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const slides = [
     {
       id: 1,
-      src: "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png",
-      alt: "Tumbler Collection - Glass Tumblers"
+      src: "/lovable-uploads/682b13e5-fc99-44ee-ac08-3cf12b6fd6a0.png",
+      alt: "Premium Glass Tumblers"
     },
     {
       id: 2,
-      src: "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
-      alt: "Tumbler Collection - Holiday Glass Mugs"
+      src: "/lovable-uploads/90727131-3103-40cd-91d9-1d1a6076f407.png",
+      alt: "Handle Mugs"
     },
     {
       id: 3,
-      src: "/lovable-uploads/682b13e5-fc99-44ee-ac08-3cf12b6fd6a0.png",
-      alt: "Tumbler Collection - Premium Glass Tumblers"
+      src: "/lovable-uploads/969ae606-a018-4743-8fb1-9f01eb1cde5c.png",
+      alt: "Glass Tumblers"
     },
     {
       id: 4,
-      src: "/lovable-uploads/b9a90ec9-c2be-4358-9678-7685c06473aa.png",
-      alt: "Tumbler Collection - Handle Mugs"
+      src: "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png",
+      alt: "Tumbler Collection"
     }
   ];
 
   useEffect(() => {
-    let interval;
-    if (autoplay) {
-      interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-      }, 3000);
-    }
+    // Set up automatic slideshow with 3-second intervals
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    }, 3000);
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [autoplay, slides.length]);
+    // Clean up interval on component unmount
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-lg">
-      <Carousel className="w-full"
-        onMouseEnter={() => setAutoplay(false)}
-        onMouseLeave={() => setAutoplay(true)}
-        value={currentSlide}
-        onValueChange={setCurrentSlide}>
+    <div className="relative w-full overflow-hidden rounded-lg p-7 bg-transparent border-4 border-white/70">
+      <Carousel className="w-full">
         <CarouselContent>
-          {slides.map((slide) => (
-            <CarouselItem key={slide.id}>
-              <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full overflow-hidden rounded-lg">
+          {slides.map((slide, index) => (
+            <CarouselItem key={slide.id} className={index === activeIndex ? "block" : "hidden"}>
+              <div className="relative h-[350px] md:h-[450px] lg:h-[550px] w-full overflow-hidden rounded-lg flex items-center justify-center">
                 <img 
                   src={slide.src} 
                   alt={slide.alt}
-                  className="w-full h-full object-contain bg-white rounded-lg" 
+                  className="w-[90%] h-[90%] object-contain transform rotate-45 transition-all duration-500" 
                 />
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-2" />
-        <CarouselNext className="right-2" />
         
+        {/* Indicator dots */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
           {slides.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSlide(index)}
+              onClick={() => setActiveIndex(index)}
               className={`w-3 h-3 rounded-full transition-colors ${
-                currentSlide === index ? "bg-brand-terracotta" : "bg-gray-300"
+                activeIndex === index ? "bg-brand-terracotta" : "bg-gray-300"
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
