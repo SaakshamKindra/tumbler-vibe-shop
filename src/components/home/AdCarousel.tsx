@@ -12,23 +12,23 @@ const AdCarousel = () => {
   const slides = [
     {
       id: 1,
-      src: "/lovable-uploads/682b13e5-fc99-44ee-ac08-3cf12b6fd6a0.png",
-      alt: "Premium Glass Tumblers"
-    },
-    {
-      id: 2,
-      src: "/lovable-uploads/90727131-3103-40cd-91d9-1d1a6076f407.png",
-      alt: "Handle Mugs"
-    },
-    {
-      id: 3,
-      src: "/lovable-uploads/969ae606-a018-4743-8fb1-9f01eb1cde5c.png",
+      src: "/lovable-uploads/969ae606-a018-4743-8fb1-9f01eb1cde5c.png", // 3rd image
       alt: "Glass Tumblers"
     },
     {
-      id: 4,
-      src: "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png",
+      id: 2,
+      src: "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png", // 5th image
+      alt: "Premium Tumbler"
+    },
+    {
+      id: 3,
+      src: "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png", // 11th image
       alt: "Tumbler Collection"
+    },
+    {
+      id: 4,
+      src: "/lovable-uploads/90727131-3103-40cd-91d9-1d1a6076f407.png", // 7th image
+      alt: "Handle Mugs"
     }
   ];
 
@@ -52,7 +52,7 @@ const AdCarousel = () => {
                 <img 
                   src={slide.src} 
                   alt={slide.alt}
-                  className="w-[90%] h-[90%] object-contain transform rotate-45 transition-all duration-500" 
+                  className="w-[90%] h-[90%] object-contain transform rotate-[22.5deg] transition-all duration-500" 
                 />
               </div>
             </CarouselItem>
