@@ -44,7 +44,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </span>
             )}
             {product.bestSeller && (
-              <span className="bg-brand-teal text-white text-xs font-bold px-2 py-1 rounded">
+              <span className="bg-brand-terracotta text-white text-xs font-bold px-2 py-1 rounded">
                 BESTSELLER
               </span>
             )}
@@ -77,12 +77,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
         
         <div className="p-4">
-          <h3 className="font-semibold text-gray-800 group-hover:text-brand-teal transition-colors">
+          <h3 className="font-semibold text-gray-800 group-hover:text-brand-terracotta transition-colors">
             {product.name}
           </h3>
           
           <div className="flex items-center justify-between mt-2">
-            <span className="font-bold text-gray-900">${product.price.toFixed(2)}</span>
+            <span className="font-bold text-gray-900">₹{product.price.toFixed(2)}</span>
             
             <div className="flex gap-1">
               {product.colors.slice(0, 3).map((color, index) => (
