@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -113,6 +114,14 @@
   .animate-slide-in-right {
     animation: slideInRight 0.5s forwards;
   }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-in forwards;
+  }
+  
+  .animate-fade-out {
+    animation: fadeOut 1s ease-out forwards;
+  }
 }
 
 .product-image-container {
@@ -189,6 +198,24 @@
   100% {
     transform: translateX(0) rotate(22.5deg);
     opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 

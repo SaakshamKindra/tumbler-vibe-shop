@@ -129,17 +129,17 @@ const CustomerService = () => {
                         <h3 className="font-semibold text-lg">Email Us</h3>
                         <p className="text-gray-600 mb-1">For general inquiries:</p>
                         <a 
-                          href="mailto:info@vibetumbler.com" 
+                          href="mailto:saakshamkindra@gmail.com" 
                           className="text-brand-teal hover:underline"
                         >
-                          info@vibetumbler.com
+                          saakshamkindra@gmail.com
                         </a>
                         <p className="text-gray-600 mt-2 mb-1">For order support:</p>
                         <a 
-                          href="mailto:support@vibetumbler.com" 
+                          href="mailto:saakshamkindra@gmail.com" 
                           className="text-brand-teal hover:underline"
                         >
-                          support@vibetumbler.com
+                          saakshamkindra@gmail.com
                         </a>
                       </div>
                     </div>
@@ -163,14 +163,14 @@ const CustomerService = () => {
                         <h3 className="font-semibold text-lg">Call Us</h3>
                         <p className="text-gray-600 mb-1">Customer Service:</p>
                         <a 
-                          href="tel:+1800TUMBLER" 
+                          href="tel:7417862083" 
                           className="text-brand-teal hover:underline"
                         >
-                          1-800-TUMBLER (1-800-886-2537)
+                          7417862083
                         </a>
                         <p className="text-gray-600 text-sm mt-1">
-                          Monday-Friday: 9am-6pm EST<br />
-                          Saturday: 10am-4pm EST<br />
+                          Monday-Friday: 9am-6pm IST<br />
+                          Saturday: 10am-4pm IST<br />
                           Sunday: Closed
                         </p>
                       </div>
@@ -195,10 +195,10 @@ const CustomerService = () => {
                       <div>
                         <h3 className="font-semibold text-lg">Our Location</h3>
                         <p className="text-gray-600">
-                          VibeTumbler Headquarters<br />
+                          ASA Artisans Headquarters<br />
                           123 Hydration Avenue<br />
                           Tumblerville, CA 90210<br />
-                          United States
+                          India
                         </p>
                       </div>
                     </div>

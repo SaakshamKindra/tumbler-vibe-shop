@@ -7,6 +7,7 @@ import AdCarousel from './AdCarousel';
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [textVisible, setTextVisible] = useState(true);
 
   useEffect(() => {
     // Add a slight delay before animation for better effect
@@ -14,7 +15,20 @@ const HeroSection = () => {
       setIsVisible(true);
     }, 200);
 
-    return () => clearTimeout(timer);
+    // Set up text fade in/out animation
+    const textFadeInterval = setInterval(() => {
+      setTextVisible(false);
+      
+      setTimeout(() => {
+        setTextVisible(true);
+      }, 1000); // 1 second of invisibility
+      
+    }, 4000); // 3 seconds visible + 1 second invisible = 4 second cycle
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(textFadeInterval);
+    };
   }, []);
 
   return (
@@ -36,17 +50,18 @@ const HeroSection = () => {
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
             }`}
           >
-            <span className="inline-block bg-brand-teal/10 text-brand-teal px-4 py-1 rounded-full text-sm font-medium mb-4">
-              Premium Drinkware
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               <span className="bg-gradient-to-r from-brand-teal to-brand-blue text-gradient">
                 Stay Hydrated
               </span>
-              <br /> in Style
             </h1>
-            <p className="text-gray-600 text-lg md:text-xl mb-8 max-w-lg">
-              Discover our collection of premium tumblers designed to keep your drinks at the perfect temperature while making a statement.
+            <p 
+              className={`text-brand-brown text-xl md:text-2xl font-bold mb-8 max-w-lg transition-opacity duration-1000 ${
+                textVisible ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              Sip Bold, Sip Your Way,<br />
+              Custom Tumblers That Steal the Show!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button asChild size="lg" className="bg-brand-terracotta hover:bg-brand-terracotta/90 text-white">

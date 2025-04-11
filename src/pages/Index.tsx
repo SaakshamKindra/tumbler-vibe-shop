@@ -38,9 +38,9 @@ const Index = () => {
                 <div className="w-12 h-12 bg-brand-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ShieldCheck className="h-6 w-6 text-brand-blue" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">Lifetime Warranty</h3>
+                <h3 className="font-bold text-lg mb-2">1 yr Warranty</h3>
                 <p className="text-gray-600 text-sm">
-                  Our tumblers are built to last and come with a lifetime guarantee.
+                  Our tumblers are built to last and come with a warranty guarantee.
                 </p>
               </div>
               
@@ -71,12 +71,12 @@ const Index = () => {
         <AboutSection />
         
         {/* Newsletter Section */}
-        <section className="py-16 bg-gradient-to-r from-brand-blue to-brand-teal text-white">
+        <section className="py-16 bg-gradient-to-r from-brand-blue to-brand-teal">
           <div className="container mx-auto px-4 max-w-3xl text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#FDE1D3]">
               Join Our Community
             </h2>
-            <p className="text-white/80 mb-8 max-w-lg mx-auto">
+            <p className="text-[#FDE1D3]/80 mb-8 max-w-lg mx-auto">
               Subscribe to our newsletter for exclusive deals, new product announcements, and hydration tips.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">

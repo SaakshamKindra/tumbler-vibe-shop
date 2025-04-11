@@ -60,6 +60,11 @@ const Footer = () => {
                   Glass Tumblers
                 </Link>
               </li>
+              <li>
+                <Link to="/feedbacks" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  Feedbacks
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -87,6 +92,11 @@ const Footer = () => {
                   Contact Us
                 </Link>
               </li>
+              <li>
+                <Link to="/feedbacks" className="text-gray-600 hover:text-brand-terracotta transition-colors">
+                  Submit Feedback
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -94,8 +104,8 @@ const Footer = () => {
           <div className="col-span-1">
             <h3 className="text-lg font-semibold mb-4 text-brand-brown">Contact Us</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>Customer Service: ASA Artisans (7417862083)</li>
-              <li>Email: saakshamkindra@gmail.com</li>
+              <li>Customer Service: <a href="tel:7417862083" className="hover:text-brand-terracotta">ASA Artisans (7417862083)</a></li>
+              <li>Email: <a href="mailto:saakshamkindra@gmail.com" className="hover:text-brand-terracotta">saakshamkindra@gmail.com</a></li>
               <li>Hours: Monday - Friday, 9AM - 5PM IST</li>
             </ul>
           </div>
