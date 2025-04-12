@@ -87,9 +87,13 @@ const ProductsPage = () => {
     }
     
     // Filter by price range
+    // Convert the slider value (0-100) to actual price (0-2000)
+    const minPrice = filters.priceRange[0] * 20;
+    const maxPrice = filters.priceRange[1] * 20;
+    
     filtered = filtered.filter(product => 
-      product.price >= filters.priceRange[0] && 
-      product.price <= filters.priceRange[1]
+      product.price >= minPrice && 
+      product.price <= maxPrice
     );
     
     // Filter by features (for demo, we're just pretending these match)

@@ -193,6 +193,13 @@ const CheckoutForm = () => {
     return Object.keys(errors).length === 0;
   };
   
+  // Function to generate QR code with payment info
+  const generatePaymentQR = () => {
+    // In a real app, you would integrate with a UPI payment gateway API
+    // For now, we'll just return the placeholder QR code
+    return `/lovable-uploads/5d27e79d-f656-417f-8e99-c4f9178dd09a.png`;
+  };
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -241,12 +248,6 @@ const CheckoutForm = () => {
         navigate('/orders');
       }, 4000);
     }, 2000);
-  };
-  
-  const formatPhoneNumber = (input: string) => {
-    const digits = input.replace(/\D/g, '').slice(0, 10);
-    if (digits.length <= 5) return digits;
-    return `${digits.slice(0, 5)} ${digits.slice(5)}`;
   };
 
   return (
@@ -418,7 +419,7 @@ const CheckoutForm = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="98765 43210"
+                      placeholder=""
                       className={formErrors.phone ? "border-red-500" : ""}
                     />
                     {formErrors.phone && (
@@ -600,15 +601,18 @@ const CheckoutForm = () => {
                   <TabsContent value="upi">
                     <div className="text-center py-4">
                       <p className="mb-4">
-                        Scan this QR code for the payment
+                        Scan this QR for the payment
                       </p>
                       <div className="bg-white p-4 rounded-lg mx-auto max-w-[200px]">
                         <img 
-                          src="/lovable-uploads/5d27e79d-f656-417f-8e99-c4f9178dd09a.png" 
+                          src={generatePaymentQR()}
                           alt="UPI QR Code" 
                           className="mx-auto w-full" 
                         />
                       </div>
+                      <p className="mt-4 text-sm text-gray-500">
+                        UPI ID: 7417862@ibl
+                      </p>
                     </div>
                   </TabsContent>
                 </Tabs>

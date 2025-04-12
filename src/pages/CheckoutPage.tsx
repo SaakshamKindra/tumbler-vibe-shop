@@ -33,7 +33,7 @@ const CheckoutPage = () => {
         </div>
       </main>
       
-      <Toaster position="top-center" />
+      <Toaster position="top-center" richColors />
       <Footer />
     </div>
   );
