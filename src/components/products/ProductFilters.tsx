@@ -15,7 +15,6 @@ import { X } from 'lucide-react';
 interface FilterOptions {
   categories: string[];
   priceRange: [number, number];
-  colors: string[];
   features: string[];
 }
 
@@ -31,14 +30,12 @@ interface ProductFiltersProps {
 const ProductFilters = ({ 
   onFilterChange, 
   categories, 
-  availableColors, 
   features,
   isMobile = false,
   onCloseMobile
 }: ProductFiltersProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
   const handleCategoryChange = (category: string) => {
@@ -50,7 +47,6 @@ const ProductFilters = ({
       updateFilters({
         categories: newCategories,
         priceRange,
-        colors: selectedColors,
         features: selectedFeatures
       });
       
@@ -65,25 +61,7 @@ const ProductFilters = ({
     updateFilters({
       categories: selectedCategories,
       priceRange: newRange,
-      colors: selectedColors,
       features: selectedFeatures
-    });
-  };
-
-  const handleColorChange = (color: string) => {
-    setSelectedColors(prev => {
-      const newColors = prev.includes(color)
-        ? prev.filter(c => c !== color)
-        : [...prev, color];
-      
-      updateFilters({
-        categories: selectedCategories,
-        priceRange,
-        colors: newColors,
-        features: selectedFeatures
-      });
-      
-      return newColors;
     });
   };
 
@@ -96,7 +74,6 @@ const ProductFilters = ({
       updateFilters({
         categories: selectedCategories,
         priceRange,
-        colors: selectedColors,
         features: newFeatures
       });
       
@@ -111,13 +88,11 @@ const ProductFilters = ({
   const clearAllFilters = () => {
     setSelectedCategories([]);
     setPriceRange([0, 100]);
-    setSelectedColors([]);
     setSelectedFeatures([]);
     
     updateFilters({
       categories: [],
       priceRange: [0, 100],
-      colors: [],
       features: []
     });
   };
@@ -127,7 +102,6 @@ const ProductFilters = ({
       selectedCategories.length > 0 ||
       priceRange[0] > 0 ||
       priceRange[1] < 100 ||
-      selectedColors.length > 0 ||
       selectedFeatures.length > 0
     );
   };
@@ -157,7 +131,7 @@ const ProductFilters = ({
         </div>
       )}
 
-      <Accordion type="multiple" defaultValue={["categories", "price", "color"]}>
+      <Accordion type="multiple" defaultValue={["categories", "price"]}>
         <AccordionItem value="categories">
           <AccordionTrigger className="font-semibold text-brand-dark">
             Categories
@@ -198,33 +172,6 @@ const ProductFilters = ({
                 <span className="text-sm text-gray-600">₹{priceRange[0] * 20}</span>
                 <span className="text-sm text-gray-600">₹{priceRange[1] * 20}</span>
               </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="color">
-          <AccordionTrigger className="font-semibold text-brand-dark">
-            Colors
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap gap-2 py-1">
-              {availableColors.map(color => (
-                <div 
-                  key={color.name} 
-                  className={`cursor-pointer rounded-full w-8 h-8 flex items-center justify-center border-2 ${
-                    selectedColors.includes(color.name) 
-                      ? 'border-brand-teal' 
-                      : 'border-transparent hover:border-gray-200'
-                  }`}
-                  onClick={() => handleColorChange(color.name)}
-                  style={{ backgroundColor: color.hex }}
-                  title={color.name}
-                >
-                  {selectedColors.includes(color.name) && (
-                    <div className="w-3 h-3 rounded-full bg-white" />
-                  )}
-                </div>
-              ))}
             </div>
           </AccordionContent>
         </AccordionItem>

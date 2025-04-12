@@ -75,14 +75,9 @@ const HeroSection = () => {
                 </Link>
               </Button>
             </div>
-            <div className="mt-8 flex items-center justify-center lg:justify-start gap-4">
-              <div className="flex -space-x-3">
-                <div className="w-10 h-10 rounded-full border-2 border-white bg-brand-blue flex items-center justify-center text-white font-bold">K</div>
-                <div className="w-10 h-10 rounded-full border-2 border-white bg-brand-teal flex items-center justify-center text-white font-bold">S</div>
-                <div className="w-10 h-10 rounded-full border-2 border-white bg-brand-purple flex items-center justify-center text-white font-bold">J</div>
-              </div>
+            <div className="mt-8 flex items-center justify-center lg:justify-start">
               <p className="text-sm text-gray-600">
-                <span className="font-semibold">1,000+ 5-star reviews</span> from happy customers
+                <span className="font-bold">1,250+ 5-star reviews</span> from happy customers
               </p>
             </div>
           </div>

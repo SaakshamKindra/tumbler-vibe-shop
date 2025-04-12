@@ -83,19 +83,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           
           <div className="flex items-center justify-between mt-2">
             <span className="font-bold text-gray-900">₹{product.price.toFixed(2)}</span>
-            
-            <div className="flex gap-1">
-              {product.colors.slice(0, 3).map((color, index) => (
-                <div 
-                  key={index}
-                  className="w-3 h-3 rounded-full border border-gray-200"
-                  style={{ backgroundColor: color.hex, opacity: color.available ? 1 : 0.5 }}
-                />
-              ))}
-              {product.colors.length > 3 && (
-                <span className="text-xs text-gray-500">+{product.colors.length - 3}</span>
-              )}
-            </div>
           </div>
           
           <div className="flex items-center mt-2">

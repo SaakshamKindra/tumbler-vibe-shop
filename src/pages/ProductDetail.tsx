@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -22,6 +23,7 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   
   useEffect(() => {
     if (product && product.colors.length > 0) {
@@ -61,6 +63,26 @@ const ProductDetail = () => {
   
   const handleColorChange = (colorName: string) => {
     setSelectedColor(colorName);
+  };
+
+  const handleToggleLike = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsLiked(prev => !prev);
+    
+    // Show toast notification
+    if (!isLiked) {
+      toast.success("Added to liked products", {
+        position: "top-right",
+        style: { background: '#fff9f3', border: '1px solid #ffcdb2', color: '#e07a5f' },
+        icon: <Heart className="h-5 w-5 text-red-600 fill-red-600" />,
+      });
+    } else {
+      toast.info("Removed from liked products", {
+        position: "top-right",
+        style: { background: '#f5f7fa', border: '1px solid #e2e8f0', color: '#64748b' },
+        icon: <Heart className="h-5 w-5" />,
+      });
+    }
   };
   
   // Find related products (same category, not including current product)
@@ -214,10 +236,15 @@ const ProductDetail = () => {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="border-gray-300"
-                      aria-label="Add to wishlist"
+                      className={`border-gray-300 transition-all duration-300 ${isLiked ? 'scale-110' : ''}`}
+                      aria-label={isLiked ? "Remove from wishlist" : "Add to wishlist"}
+                      onClick={handleToggleLike}
                     >
-                      <Heart className="h-4 w-4" />
+                      <Heart 
+                        className={`h-4 w-4 transition-colors duration-300 ${
+                          isLiked ? 'text-red-600 fill-red-600' : 'text-gray-400'
+                        }`} 
+                      />
                     </Button>
                   </div>
                 </div>
@@ -308,7 +335,7 @@ const ProductDetail = () => {
                     <div>
                       <h4 className="font-semibold mb-1">Warranty</h4>
                       <p className="text-gray-600 text-sm">
-                        All of our tumblers come with a limited lifetime warranty against manufacturing defects. 
+                        All of our tumblers come with a limited 1-year warranty against manufacturing defects. 
                         This warranty does not cover damage from normal wear and tear or misuse.
                       </p>
                     </div>

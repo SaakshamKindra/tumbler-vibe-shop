@@ -64,6 +64,10 @@ const ProductsPage = () => {
   
   // Extract common features from products
   const features = [
+    "Premium",
+    "Tumblers",
+    "Kids",
+    "Glass Tumblers",
     "Double-wall insulation",
     "Stainless steel",
     "Sweat-free exterior",
@@ -88,22 +92,28 @@ const ProductsPage = () => {
       product.price <= filters.priceRange[1]
     );
     
-    // Filter by colors
-    if (filters.colors.length > 0) {
-      filtered = filtered.filter(product => 
-        product.colors.some(color => 
-          filters.colors.includes(color.name) && color.available
-        )
-      );
-    }
-    
     // Filter by features (for demo, we're just pretending these match)
     if (filters.features.length > 0) {
       // In a real app, you would check product.features against the selected features
       filtered = filtered.filter(product => 
-        filters.features.some((feature: string) => 
-          product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()))
-        )
+        filters.features.some((feature: string) => {
+          // Special handling for product categories
+          if (feature === "Premium" && product.tags.includes("premium")) {
+            return true;
+          }
+          if (feature === "Tumblers" && product.category.includes("Tumbler")) {
+            return true;
+          }
+          if (feature === "Kids" && product.tags.includes("kids")) {
+            return true;
+          }
+          if (feature === "Glass Tumblers" && product.tags.includes("glass")) {
+            return true;
+          }
+          
+          // Regular feature filtering
+          return product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
+        })
       );
     }
     
