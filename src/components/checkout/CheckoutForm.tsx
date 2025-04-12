@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,14 +37,25 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-import { CreditCard, CircleDollarSign } from 'lucide-react';
+import { CreditCard, Smartphone } from 'lucide-react';
+
+// List of Indian states
+const indianStates = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
+  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
+  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", 
+  "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", 
+  "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+];
 
 const CheckoutForm = () => {
   const { subtotal, totalItems, cart, clearCart } = useCart();
   const navigate = useNavigate();
   
-  const shipping = subtotal > 50 ? 0 : 5.99;
-  const tax = subtotal * 0.08; // 8% tax rate
+  const [shippingMethod, setShippingMethod] = useState('standard');
+  const shipping = shippingMethod === 'express' ? 150 : (subtotal > 1800 ? 0 : 99);
+  const tax = subtotal * 0.18; // 18% tax rate
   const total = subtotal + shipping + tax;
   
   const [formData, setFormData] = useState({
@@ -56,10 +67,9 @@ const CheckoutForm = () => {
     city: '',
     state: '',
     zipCode: '',
-    country: 'United States',
+    country: 'India',
     phone: '',
     saveAddress: true,
-    shippingMethod: 'standard',
     paymentMethod: 'credit-card',
     cardName: '',
     cardNumber: '',
@@ -72,10 +82,24 @@ const CheckoutForm = () => {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    
+    if (name === 'phone') {
+      // Format phone number as 5 digits space 5 digits (Indian format)
+      const digits = value.replace(/\D/g, '').slice(0, 10);
+      const formattedPhone = digits.length > 5 
+        ? `${digits.slice(0, 5)} ${digits.slice(5)}` 
+        : digits;
+      
+      setFormData(prev => ({
+        ...prev,
+        phone: formattedPhone
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
     
     // Clear error when field is updated
     if (formErrors[name]) {
@@ -93,6 +117,10 @@ const CheckoutForm = () => {
       [name]: value
     }));
     
+    if (name === 'shippingMethod') {
+      setShippingMethod(value);
+    }
+    
     // Clear error when field is updated
     if (formErrors[name]) {
       setFormErrors(prev => {
@@ -109,7 +137,7 @@ const CheckoutForm = () => {
     // Required fields
     const requiredFields = [
       'email', 'firstName', 'lastName', 'address1', 
-      'city', 'state', 'zipCode', 'country', 'phone'
+      'city', 'state', 'zipCode', 'phone'
     ];
     
     requiredFields.forEach(field => {
@@ -123,14 +151,17 @@ const CheckoutForm = () => {
       errors.email = 'Please enter a valid email address';
     }
     
-    // Zip code validation
-    if (formData.zipCode && !/^\d{5}(-\d{4})?$/.test(formData.zipCode)) {
-      errors.zipCode = 'Please enter a valid zip code';
+    // PIN code validation (6 digits for India)
+    if (formData.zipCode && !/^\d{6}$/.test(formData.zipCode)) {
+      errors.zipCode = 'Please enter a valid 6-digit PIN code';
     }
     
-    // Phone validation
-    if (formData.phone && !/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      errors.phone = 'Please enter a valid 10-digit phone number';
+    // Phone validation (10 digits for India)
+    if (formData.phone) {
+      const digits = formData.phone.replace(/\D/g, '');
+      if (digits.length !== 10) {
+        errors.phone = 'Please enter a valid 10-digit phone number';
+      }
     }
     
     // Credit card validation if payment method is credit card
@@ -172,22 +203,52 @@ const CheckoutForm = () => {
     
     setProcessing(true);
     
+    // Create order object
+    const orderDate = new Date();
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 5); // Delivery in 5 days
+    
+    const order = {
+      orderId: `ORD-${Math.floor(100000 + Math.random() * 900000)}`,
+      orderDate: orderDate.toISOString(),
+      deliveryDate: deliveryDate.toISOString(),
+      items: [...cart],
+      shipping: { ...formData },
+      shippingMethod,
+      subtotal,
+      shipping,
+      tax,
+      total,
+      paymentMethod: formData.paymentMethod
+    };
+    
+    // Save to localStorage
+    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+    localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]));
+    
     // Simulate payment processing
     setTimeout(() => {
       setProcessing(false);
       
-      // Clear cart and redirect to success page
+      // Show success toast
+      toast.success("Your order has been placed. Thank you for ordering with us!");
+      
+      // Clear cart
       clearCart();
-      navigate('/checkout/success', { 
-        state: { 
-          orderId: `ORD-${Math.floor(100000 + Math.random() * 900000)}`,
-          total: total.toFixed(2),
-          email: formData.email
-        } 
-      });
+      
+      // Redirect to orders page after 4 seconds
+      setTimeout(() => {
+        navigate('/orders');
+      }, 4000);
     }, 2000);
   };
   
+  const formatPhoneNumber = (input: string) => {
+    const digits = input.replace(/\D/g, '').slice(0, 10);
+    if (digits.length <= 5) return digits;
+    return `${digits.slice(0, 5)} ${digits.slice(5)}`;
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -311,15 +372,9 @@ const CheckoutForm = () => {
                         <SelectValue placeholder="Select state" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="AL">Alabama</SelectItem>
-                        <SelectItem value="AK">Alaska</SelectItem>
-                        <SelectItem value="AZ">Arizona</SelectItem>
-                        <SelectItem value="CA">California</SelectItem>
-                        <SelectItem value="CO">Colorado</SelectItem>
-                        <SelectItem value="FL">Florida</SelectItem>
-                        <SelectItem value="NY">New York</SelectItem>
-                        <SelectItem value="TX">Texas</SelectItem>
-                        {/* Add more states as needed */}
+                        {indianStates.map((state) => (
+                          <SelectItem key={state} value={state}>{state}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     {formErrors.state && (
@@ -328,12 +383,13 @@ const CheckoutForm = () => {
                   </div>
                   
                   <div>
-                    <Label htmlFor="zipCode">Zip/Postal Code</Label>
+                    <Label htmlFor="zipCode">PIN Code</Label>
                     <Input
                       id="zipCode"
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleChange}
+                      maxLength={6}
                       className={formErrors.zipCode ? "border-red-500" : ""}
                     />
                     {formErrors.zipCode && (
@@ -345,23 +401,13 @@ const CheckoutForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
                     <Label htmlFor="country">Country</Label>
-                    <Select 
-                      value={formData.country} 
-                      onValueChange={(value) => handleSelectChange('country', value)}
-                    >
-                      <SelectTrigger id="country" className={formErrors.country ? "border-red-500" : ""}>
-                        <SelectValue placeholder="Select country" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="United States">United States</SelectItem>
-                        <SelectItem value="Canada">Canada</SelectItem>
-                        <SelectItem value="Mexico">Mexico</SelectItem>
-                        {/* Add more countries as needed */}
-                      </SelectContent>
-                    </Select>
-                    {formErrors.country && (
-                      <p className="text-red-500 text-sm mt-1">{formErrors.country}</p>
-                    )}
+                    <Input
+                      id="country"
+                      name="country"
+                      value="India"
+                      disabled
+                      className="bg-gray-50"
+                    />
                   </div>
                   
                   <div>
@@ -372,7 +418,7 @@ const CheckoutForm = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="(123) 456-7890"
+                      placeholder="98765 43210"
                       className={formErrors.phone ? "border-red-500" : ""}
                     />
                     {formErrors.phone && (
@@ -416,8 +462,8 @@ const CheckoutForm = () => {
                         id="shipping-standard"
                         name="shippingMethod"
                         value="standard"
-                        checked={formData.shippingMethod === 'standard'}
-                        onChange={handleChange}
+                        checked={shippingMethod === 'standard'}
+                        onChange={(e) => handleSelectChange('shippingMethod', e.target.value)}
                         className="text-brand-teal"
                       />
                       <div>
@@ -425,12 +471,12 @@ const CheckoutForm = () => {
                           Standard Shipping (3-5 business days)
                         </Label>
                         <p className="text-sm text-gray-500">
-                          Free for orders over $50
+                          Free for orders over ₹1800
                         </p>
                       </div>
                     </div>
                     <span className="font-medium">
-                      {subtotal > 50 ? 'FREE' : '$5.99'}
+                      {subtotal > 1800 ? 'FREE' : '₹99.00'}
                     </span>
                   </div>
                   
@@ -441,8 +487,8 @@ const CheckoutForm = () => {
                         id="shipping-express"
                         name="shippingMethod"
                         value="express"
-                        checked={formData.shippingMethod === 'express'}
-                        onChange={handleChange}
+                        checked={shippingMethod === 'express'}
+                        onChange={(e) => handleSelectChange('shippingMethod', e.target.value)}
                         className="text-brand-teal"
                       />
                       <div>
@@ -454,7 +500,7 @@ const CheckoutForm = () => {
                         </p>
                       </div>
                     </div>
-                    <span className="font-medium">$12.99</span>
+                    <span className="font-medium">₹150.00</span>
                   </div>
                 </div>
               </CardContent>
@@ -479,9 +525,9 @@ const CheckoutForm = () => {
                       <CreditCard className="h-4 w-4" />
                       Credit Card
                     </TabsTrigger>
-                    <TabsTrigger value="paypal" className="flex items-center justify-center gap-2">
-                      <CircleDollarSign className="h-4 w-4" />
-                      PayPal
+                    <TabsTrigger value="upi" className="flex items-center justify-center gap-2">
+                      <Smartphone className="h-4 w-4" />
+                      UPI
                     </TabsTrigger>
                   </TabsList>
                   
@@ -551,16 +597,18 @@ const CheckoutForm = () => {
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="paypal">
-                    <div className="text-center py-8">
+                  <TabsContent value="upi">
+                    <div className="text-center py-4">
                       <p className="mb-4">
-                        You'll be redirected to PayPal to complete your purchase securely.
+                        Scan this QR code for the payment
                       </p>
-                      <img 
-                        src="/placeholder.svg" 
-                        alt="PayPal" 
-                        className="max-h-10 mx-auto" 
-                      />
+                      <div className="bg-white p-4 rounded-lg mx-auto max-w-[200px]">
+                        <img 
+                          src="/lovable-uploads/5d27e79d-f656-417f-8e99-c4f9178dd09a.png" 
+                          alt="UPI QR Code" 
+                          className="mx-auto w-full" 
+                        />
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -596,7 +644,7 @@ const CheckoutForm = () => {
                             </p>
                           </div>
                           <div className="font-medium text-sm">
-                            ${(item.product.price * item.quantity).toFixed(2)}
+                            ₹{(item.product.price * item.quantity).toFixed(2)}
                           </div>
                         </div>
                       ))}
@@ -608,24 +656,26 @@ const CheckoutForm = () => {
               <div className="space-y-3 my-6 pt-4 border-t border-gray-200">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium">₹{subtotal.toFixed(2)}</span>
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
+                  <span className="text-gray-600">
+                    {shippingMethod === 'express' ? 'Express Shipping' : 'Shipping'}
+                  </span>
                   <span className="font-medium">
-                    {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
+                    {shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-gray-600">Estimated Tax</span>
-                  <span className="font-medium">${tax.toFixed(2)}</span>
+                  <span className="font-medium">₹{tax.toFixed(2)}</span>
                 </div>
                 
                 <div className="border-t border-gray-200 pt-3 flex justify-between">
                   <span className="font-bold">Total</span>
-                  <span className="font-bold">${total.toFixed(2)}</span>
+                  <span className="font-bold">₹{total.toFixed(2)}</span>
                 </div>
               </div>
               
@@ -636,6 +686,15 @@ const CheckoutForm = () => {
               >
                 {processing ? "Processing..." : "Complete Order"}
               </Button>
+              
+              <div className="mt-4 flex justify-between">
+                <Link to="/cart" className="text-sm text-brand-teal hover:underline">
+                  Return to cart
+                </Link>
+                <Link to="/orders" className="text-sm text-brand-teal hover:underline">
+                  Your Orders
+                </Link>
+              </div>
               
               <p className="text-xs text-gray-500 mt-4 text-center">
                 By completing your purchase, you agree to our{' '}

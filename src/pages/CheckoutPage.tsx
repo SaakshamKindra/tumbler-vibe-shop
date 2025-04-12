@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { useCart } from '@/contexts/CartContext';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
+import { Toaster } from 'sonner';
 
 const CheckoutPage = () => {
   const { cart } = useCart();
@@ -32,6 +33,7 @@ const CheckoutPage = () => {
         </div>
       </main>
       
+      <Toaster position="top-center" />
       <Footer />
     </div>
   );

@@ -16,7 +16,7 @@ const CartSummary = () => {
   const navigate = useNavigate();
   
   // Calculate estimated values for the cart summary
-  const shipping = subtotal > 1000 ? 0 : 99; // Free shipping over ₹1000
+  const shipping = subtotal > 1800 ? 0 : 99; // Free shipping over ₹1800
   const tax = subtotal * 0.18; // 18% GST
   const total = subtotal + shipping + tax;
 
@@ -76,7 +76,7 @@ const CartSummary = () => {
       
       <div className="mt-6 text-xs text-gray-500">
         <p className="mb-2">
-          Free shipping on orders over ₹1000. Standard shipping takes 3-5 business days.
+          Free shipping on orders over ₹1800. Standard shipping takes 3-5 business days.
         </p>
         <p>
           30-day easy returns. See our <a href="/customer-service#returns" className="text-brand-terracotta hover:underline">return policy</a> for more details.
