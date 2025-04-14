@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -7,7 +6,7 @@ import ProductGrid from '@/components/products/ProductGrid';
 import ProductFilters from '@/components/products/ProductFilters';
 import { useProducts } from '@/contexts/ProductsContext';
 import { Button } from '@/components/ui/button';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { Product } from '@/types';
 
 const ProductsPage = () => {
@@ -15,44 +14,66 @@ const ProductsPage = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [isLoading, setIsLoading] = useState(true);
   const [filterMobileOpen, setFilterMobileOpen] = useState(false);
+  const [sortOption, setSortOption] = useState('Featured');
   const location = useLocation();
   
   useEffect(() => {
-    // Simulate loading
     setIsLoading(true);
     
-    // Parse URL query parameters
     const searchParams = new URLSearchParams(location.search);
     const categoryParam = searchParams.get('category');
     const tagParam = searchParams.get('tag');
     
-    // Apply initial filters from URL parameters
+    let filtered = [...products];
+    
     if (categoryParam) {
-      const filtered = products.filter(
+      filtered = filtered.filter(
         product => product.category.toLowerCase() === categoryParam.toLowerCase()
       );
-      setFilteredProducts(filtered);
     } else if (tagParam) {
-      const filtered = products.filter(
+      filtered = filtered.filter(
         product => product.tags.some(tag => tag.toLowerCase() === tagParam.toLowerCase())
       );
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts(products);
     }
     
-    // Simulate API request time
+    // Apply sorting
+    switch (sortOption) {
+      case 'Price: Low to High':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'Price: High to Low':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'Newest':
+        filtered.sort((a, b) => {
+          if (a.isNew && !b.isNew) return -1;
+          if (!a.isNew && b.isNew) return 1;
+          return 0;
+        });
+        break;
+      case 'Best Selling':
+        filtered.sort((a, b) => {
+          if (a.bestSeller && !b.bestSeller) return -1;
+          if (!a.bestSeller && b.bestSeller) return 1;
+          return 0;
+        });
+        break;
+      default:
+        // Featured - no sorting needed
+        break;
+    }
+    
+    setFilteredProducts(filtered);
+    
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [location.search, products]);
+  }, [location.search, products, sortOption]);
   
-  // Extract all categories from products
   const categories = Array.from(new Set(products.map(product => product.category)));
   
-  // Extract all colors from products
   const availableColors = products.reduce<{ name: string; hex: string }[]>((acc, product) => {
     product.colors.forEach(color => {
       if (!acc.some(c => c.name === color.name)) {
@@ -62,7 +83,6 @@ const ProductsPage = () => {
     return acc;
   }, []);
   
-  // Extract common features from products
   const features = [
     "Premium",
     "Tumblers",
@@ -79,15 +99,12 @@ const ProductsPage = () => {
   const handleFilterChange = (filters: any) => {
     let filtered = [...products];
     
-    // Filter by categories
     if (filters.categories.length > 0) {
       filtered = filtered.filter(product => 
         filters.categories.includes(product.category)
       );
     }
     
-    // Filter by price range
-    // Convert the slider value (0-100) to actual price (0-2000)
     const minPrice = filters.priceRange[0] * 20;
     const maxPrice = filters.priceRange[1] * 20;
     
@@ -96,12 +113,9 @@ const ProductsPage = () => {
       product.price <= maxPrice
     );
     
-    // Filter by features (for demo, we're just pretending these match)
     if (filters.features.length > 0) {
-      // In a real app, you would check product.features against the selected features
       filtered = filtered.filter(product => 
         filters.features.some((feature: string) => {
-          // Special handling for product categories
           if (feature === "Premium" && product.tags.includes("premium")) {
             return true;
           }
@@ -115,7 +129,6 @@ const ProductsPage = () => {
             return true;
           }
           
-          // Regular feature filtering
           return product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
         })
       );
@@ -129,7 +142,6 @@ const ProductsPage = () => {
       <Navbar />
       
       <main className="flex-grow pt-20">
-        {/* Banner/Header for the collection */}
         <div className="bg-brand-beige py-8">
           <div className="container mx-auto px-4">
             <h1 className="text-3xl md:text-4xl font-bold mb-2 text-brand-brown">
@@ -141,9 +153,7 @@ const ProductsPage = () => {
           </div>
         </div>
         
-        {/* Products Container */}
         <div className="container mx-auto px-4 py-8">
-          {/* Mobile Filter Button */}
           <div className="lg:hidden mb-4">
             <Button 
               variant="outline" 
@@ -156,7 +166,6 @@ const ProductsPage = () => {
           </div>
           
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters - Desktop */}
             <div className="hidden lg:block w-64 flex-shrink-0">
               <ProductFilters 
                 onFilterChange={handleFilterChange}
@@ -166,7 +175,6 @@ const ProductsPage = () => {
               />
             </div>
             
-            {/* Filters - Mobile Drawer */}
             {filterMobileOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
                 <div className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-brand-cream shadow-lg overflow-auto animate-fade-in">
@@ -182,7 +190,6 @@ const ProductsPage = () => {
               </div>
             )}
             
-            {/* Products Grid */}
             <div className="flex-grow">
               <div className="mb-6 flex justify-between items-center">
                 <p className="text-brand-brown opacity-80">
@@ -190,7 +197,11 @@ const ProductsPage = () => {
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-brand-brown opacity-80 hidden sm:inline">Sort by:</span>
-                  <select className="border rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-terracotta text-brand-brown border-brand-terracotta bg-brand-cream">
+                  <select 
+                    className="border rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-terracotta text-brand-brown border-brand-terracotta bg-brand-cream"
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                  >
                     <option>Featured</option>
                     <option>Price: Low to High</option>
                     <option>Price: High to Low</option>

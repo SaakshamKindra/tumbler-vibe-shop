@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram } from 'lucide-react';
@@ -113,12 +112,9 @@ const Footer = () => {
 
         <div className="border-t border-gray-200 mt-12 pt-8 text-center text-gray-500 text-sm">
           <p>&copy; {new Date().getFullYear()} ASA artisans. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
+          <div className="mt-2">
             <Link to="/privacy-policy" className="hover:text-brand-terracotta transition-colors">
               Privacy Policy
-            </Link>
-            <Link to="/terms-of-service" className="hover:text-brand-terracotta transition-colors">
-              Terms of Service
             </Link>
           </div>
         </div>

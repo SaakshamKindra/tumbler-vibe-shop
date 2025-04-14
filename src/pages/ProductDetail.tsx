@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -20,22 +19,15 @@ const ProductDetail = () => {
   
   const product = getProduct(numericId);
   
-  const [selectedColor, setSelectedColor] = useState('');
+  const defaultColor = product?.colors.find(color => color.available)?.name || product?.colors[0]?.name || '';
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   
   useEffect(() => {
-    if (product && product.colors.length > 0) {
-      // Set default color to the first available color
-      const defaultColor = product.colors.find(color => color.available);
-      setSelectedColor(defaultColor ? defaultColor.name : product.colors[0].name);
-    }
-    
     window.scrollTo(0, 0);
   }, [product]);
   
-  // If product not found
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -58,18 +50,13 @@ const ProductDetail = () => {
   }
   
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedColor);
+    addToCart(product, quantity, defaultColor);
   };
   
-  const handleColorChange = (colorName: string) => {
-    setSelectedColor(colorName);
-  };
-
   const handleToggleLike = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsLiked(prev => !prev);
     
-    // Show toast notification
     if (!isLiked) {
       toast.success("Added to liked products", {
         position: "top-right",
@@ -85,7 +72,6 @@ const ProductDetail = () => {
     }
   };
   
-  // Find related products (same category, not including current product)
   const relatedProducts = products
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
@@ -96,7 +82,6 @@ const ProductDetail = () => {
       
       <main className="flex-grow pt-24">
         <div className="container mx-auto px-4">
-          {/* Breadcrumbs */}
           <div className="text-sm text-gray-500 mb-8">
             <a href="/" className="hover:text-brand-teal transition-colors">Home</a>
             <ChevronRight className="h-3 w-3 inline mx-1" />
@@ -109,9 +94,7 @@ const ProductDetail = () => {
             <span className="text-gray-700">{product.name}</span>
           </div>
           
-          {/* Product Detail Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-            {/* Product Images */}
             <div>
               <div className="bg-gray-50 rounded-xl overflow-hidden mb-4">
                 <img
@@ -140,9 +123,7 @@ const ProductDetail = () => {
               </div>
             </div>
             
-            {/* Product Info */}
             <div>
-              {/* Tags & Title */}
               <div className="mb-4">
                 {product.isNew && (
                   <span className="inline-block bg-brand-purple text-white text-xs font-bold px-2 py-1 rounded mr-2">
@@ -158,7 +139,6 @@ const ProductDetail = () => {
               
               <h1 className="text-3xl md:text-4xl font-bold mb-2">{product.name}</h1>
               
-              {/* Price & Rating */}
               <div className="flex items-center justify-between mb-6">
                 <span className="text-2xl font-bold text-gray-900">
                   ₹{product.price.toFixed(2)}
@@ -179,56 +159,28 @@ const ProductDetail = () => {
                 </div>
               </div>
               
-              {/* Description */}
               <p className="text-gray-600 mb-6">
                 {product.description}
               </p>
               
-              {/* Color Selection */}
-              <div className="mb-6">
-                <h3 className="font-semibold mb-2">Color: <span className="font-normal">{selectedColor}</span></h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map(color => (
-                    <button
-                      key={color.name}
-                      className={`w-10 h-10 rounded-full border-2 flex items-center justify-center ${
-                        selectedColor === color.name
-                          ? 'border-brand-teal'
-                          : 'border-transparent hover:border-gray-300'
-                      } ${!color.available ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                      style={{ backgroundColor: color.hex }}
-                      onClick={() => color.available && handleColorChange(color.name)}
-                      disabled={!color.available}
-                      aria-label={`Select ${color.name} color`}
-                    >
-                      {selectedColor === color.name && (
-                        <div className="w-3 h-3 rounded-full bg-white" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Quantity & Add to Cart */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <div className="sm:w-1/3">
                   <h3 className="font-semibold mb-2">Quantity</h3>
                   <ProductQuantity
                     quantity={quantity}
                     onDecrease={() => setQuantity(prev => Math.max(1, prev - 1))}
-                    onIncrease={() => setQuantity(prev => Math.min(product.inventory, prev + 1))}
+                    onIncrease={() => setQuantity(prev => Math.min(product?.inventory || 0, prev + 1))}
                     onChange={setQuantity}
-                    max={product.inventory}
+                    max={product?.inventory || 0}
                   />
                 </div>
                 
                 <div className="sm:w-2/3">
-                  <h3 className="font-semibold mb-2">Total: ₹{(product.price * quantity).toFixed(2)}</h3>
+                  <h3 className="font-semibold mb-2">Total: ₹{product ? (product.price * quantity).toFixed(2) : '0.00'}</h3>
                   <div className="flex gap-2">
                     <Button
-                      onClick={handleAddToCart}
+                      onClick={() => handleAddToCart()}
                       className="flex-grow bg-brand-teal hover:bg-brand-teal/90 text-white"
-                      disabled={!selectedColor}
                     >
                       <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                     </Button>
@@ -250,7 +202,6 @@ const ProductDetail = () => {
                 </div>
               </div>
               
-              {/* Shipping & Returns Info */}
               <div className="space-y-2 mb-8">
                 <div className="flex items-center text-sm text-gray-600">
                   <CircleCheck className="h-4 w-4 text-green-500 mr-2" />
@@ -266,7 +217,6 @@ const ProductDetail = () => {
                 </div>
               </div>
               
-              {/* Product Details Tabs */}
               <Tabs defaultValue="features">
                 <TabsList className="w-full grid grid-cols-3">
                   <TabsTrigger value="features">Features</TabsTrigger>
@@ -345,7 +295,6 @@ const ProductDetail = () => {
             </div>
           </div>
           
-          {/* Related Products */}
           {relatedProducts.length > 0 && (
             <div className="my-16">
               <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
