@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -300,7 +299,7 @@ const CustomerService = () => {
                 <h2 className="text-2xl font-bold mb-6">Shipping & Delivery</h2>
                 
                 <div className="space-y-8">
-                  <div className="bg-gray-50 p-6 rounded-lg">
+                  <div className="bg-gray-50 dark:bg-secondary p-6 rounded-lg">
                     <div className="flex items-start">
                       <div className="w-12 h-12 bg-brand-teal/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                         <Truck className="h-6 w-6 text-brand-teal" />
@@ -310,21 +309,21 @@ const CustomerService = () => {
                         <div className="space-y-4">
                           <div>
                             <h4 className="font-medium">Standard Shipping</h4>
-                            <p className="text-gray-600">
-                              Free for orders over $50, otherwise $5.99<br />
+                            <p className="text-gray-600 dark:text-gray-300">
+                              Free for orders over ₹1,800, otherwise ₹99<br />
                               Delivery in 3-5 business days
                             </p>
                           </div>
                           <div>
                             <h4 className="font-medium">Express Shipping</h4>
-                            <p className="text-gray-600">
-                              $12.99 for all orders<br />
+                            <p className="text-gray-600 dark:text-gray-300">
+                              ₹150 for all orders<br />
                               Delivery in 1-2 business days
                             </p>
                           </div>
                           <div>
                             <h4 className="font-medium">International Shipping</h4>
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 dark:text-gray-300">
                               Available to select countries<br />
                               Rates and delivery times vary by location
                             </p>
