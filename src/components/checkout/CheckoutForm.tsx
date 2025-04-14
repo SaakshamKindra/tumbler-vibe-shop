@@ -5,7 +5,25 @@ import { toast } from 'sonner';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-const initialFormData = {
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  paymentMethod: 'creditCard';
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+}
+
+interface FormErrors {
+  [key: string]: string;
+}
+
+const initialFormData: FormData = {
   firstName: '',
   lastName: '',
   email: '',
@@ -23,39 +41,34 @@ const CheckoutForm = () => {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initialFormData);
-  const [errors, setErrors] = useState({});
-  
+  const [errors, setErrors] = useState<FormErrors>({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
-    // Clear error when the user types
     setErrors(prevState => ({ ...prevState, [name]: '' }));
   };
-  
+
   const validateForm = () => {
     let newErrors = {};
     
-    // Required fields validation
     ['firstName', 'lastName', 'email', 'address', 'city', 'state', 'zip', 'paymentMethod'].forEach(field => {
       if (!formData[field]) {
         newErrors[field] = 'This field is required';
       }
     });
     
-    // Email validation
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Invalid email format';
     }
     
-    // ZIP code validation (basic format)
     if (formData.zip && !/^\d{5}(-\d{4})?$/.test(formData.zip)) {
       newErrors.zip = 'Invalid ZIP code format';
     }
     
-    // Payment details validation (simplified)
     if (formData.paymentMethod === 'creditCard') {
       if (!formData.cardNumber) newErrors.cardNumber = 'Card number is required';
       if (!formData.expiryDate) newErrors.expiryDate = 'Expiry date is required';
@@ -74,10 +87,8 @@ const CheckoutForm = () => {
       return;
     }
     
-    // Process the order
     toast.success("Processing your order...");
     
-    // Simulate payment processing
     setTimeout(() => {
       toast.success("Payment successful!");
       toast({
@@ -86,18 +97,14 @@ const CheckoutForm = () => {
         duration: 4000,
       });
       
-      // Reset form and redirect to orders page
-      setTimeout(() => {
-        clearCart();
-        setFormData(initialFormData);
-        navigate('/orders');
-      }, 4000);
+      clearCart();
+      setFormData(initialFormData);
+      navigate('/orders');
     }, 2000);
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Contact Information */}
       <div>
         <h3 className="text-xl font-semibold mb-4 text-brand-brown">Contact Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -135,7 +142,6 @@ const CheckoutForm = () => {
         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
       </div>
       
-      {/* Shipping Address */}
       <div>
         <h3 className="text-xl font-semibold mb-4 text-brand-brown">Shipping Address</h3>
         <Input
@@ -184,7 +190,6 @@ const CheckoutForm = () => {
         </div>
       </div>
       
-      {/* Payment Information */}
       <div>
         <h3 className="text-xl font-semibold mb-4 text-brand-brown">Payment Information</h3>
         <div className="mb-4">
@@ -235,7 +240,6 @@ const CheckoutForm = () => {
         )}
       </div>
       
-      {/* Submit Button */}
       <div>
         <Button className="w-full bg-brand-terracotta hover:bg-brand-terracotta/90 text-white">
           Complete Order

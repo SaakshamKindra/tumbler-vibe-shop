@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, Search, Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Moon, Sun } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 
@@ -9,44 +8,43 @@ const Navbar = () => {
   const { totalItems } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when changing routes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/90 backdrop-blur-md shadow-sm py-2'
+          ? 'bg-white/90 dark:bg-[#2A1B14]/90 backdrop-blur-md shadow-sm py-2'
           : 'bg-transparent py-4'
       }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center">
             <h1 className="text-2xl font-bold text-brand-brown font-display">
               <span className="text-brand-terracotta">ASA</span> artisans
             </h1>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
@@ -74,7 +72,6 @@ const Navbar = () => {
             </Link>
           </nav>
 
-          {/* Desktop Right Side Icons */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="icon" aria-label="Search">
               <Search className="h-5 w-5" />
@@ -94,9 +91,20 @@ const Navbar = () => {
                 )}
               </Button>
             </Link>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleDarkMode}
+              aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-[#F5E0C3]" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex items-center space-x-3 md:hidden">
             <Link to="/cart" className="relative">
               <Button variant="ghost" size="sm" aria-label="Cart">
@@ -120,7 +128,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg absolute top-full left-0 right-0 z-50 animate-fade-in">
           <nav className="container mx-auto py-4 px-6 flex flex-col space-y-4">
