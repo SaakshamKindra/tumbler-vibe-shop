@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
@@ -12,7 +11,7 @@ interface CartItemProps {
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-  const { product, quantity, color } = item;
+  const { product, quantity } = item;
   const { removeFromCart, updateQuantity } = useCart();
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -23,11 +22,8 @@ const CartItem = ({ item }: CartItemProps) => {
     removeFromCart(product.id);
   };
 
-  const colorObj = product.colors.find(c => c.name === color);
-
   return (
     <div className="flex flex-col sm:flex-row border-b border-gray-200 py-4">
-      {/* Product Image */}
       <div className="sm:w-1/4 mb-4 sm:mb-0 flex-shrink-0">
         <Link to={`/product/${product.id}`} className="block">
           <img
@@ -38,7 +34,6 @@ const CartItem = ({ item }: CartItemProps) => {
         </Link>
       </div>
 
-      {/* Product Details */}
       <div className="sm:w-3/4 sm:pl-6 flex flex-col sm:flex-row flex-grow">
         <div className="flex-grow">
           <div className="flex justify-between">
@@ -58,15 +53,6 @@ const CartItem = ({ item }: CartItemProps) => {
             </Button>
           </div>
 
-          <div className="mt-1 flex items-center">
-            <span className="text-sm text-gray-500 mr-2">Color:</span>
-            <div
-              className="w-4 h-4 rounded-full border border-gray-300"
-              style={{ backgroundColor: colorObj?.hex || '#999' }}
-            ></div>
-            <span className="ml-1 text-sm text-gray-500">{color}</span>
-          </div>
-
           <div className="mt-1 text-sm text-gray-500">
             {product.specifications.capacity}
           </div>
@@ -81,12 +67,11 @@ const CartItem = ({ item }: CartItemProps) => {
             />
 
             <div className="font-semibold text-gray-900">
-              ${(product.price * quantity).toFixed(2)}
+              ₹{(product.price * quantity).toFixed(2)}
             </div>
           </div>
         </div>
 
-        {/* Remove Button (Desktop) */}
         <div className="hidden sm:block ml-4">
           <Button
             variant="ghost"

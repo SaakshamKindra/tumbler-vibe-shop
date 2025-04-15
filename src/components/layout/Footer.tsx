@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Youtube, MapPin, Mail, Phone } from 'lucide-react';
+import { Instagram, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -17,17 +17,13 @@ const Footer = () => {
               Craft your hydration journey with our premium, customizable tumblers designed to keep your drinks at the perfect temperature all day long.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="text-brand-brown/70 hover:text-brand-teal transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-brand-brown/70 hover:text-brand-teal transition-colors">
+              <a 
+                href="https://www.instagram.com/asaartisangifts?igsh=MW5sbjV4d21yazlqcA==" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-brand-brown/70 hover:text-brand-teal transition-colors"
+              >
                 <Instagram size={20} />
-              </a>
-              <a href="#" className="text-brand-brown/70 hover:text-brand-teal transition-colors">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-brand-brown/70 hover:text-brand-teal transition-colors">
-                <Youtube size={20} />
               </a>
             </div>
           </div>
@@ -120,14 +116,20 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 flex-shrink-0 text-brand-teal" />
-                <a href="mailto:saakshamkindra@gmail.com" className="hover:text-brand-teal transition-colors">
+                <a 
+                  href="mailto:saakshamkindra@gmail.com" 
+                  className="hover:text-brand-teal transition-colors"
+                >
                   saakshamkindra@gmail.com
                 </a>
               </li>
               <li className="flex items-center">
                 <Phone size={18} className="mr-2 flex-shrink-0 text-brand-teal" />
-                <a href="tel:+918258963225" className="hover:text-brand-teal transition-colors">
-                  +91 825 896 3225
+                <a 
+                  href="tel:+917417862083" 
+                  className="hover:text-brand-teal transition-colors"
+                >
+                  +91 741 786 2083
                 </a>
               </li>
             </ul>
