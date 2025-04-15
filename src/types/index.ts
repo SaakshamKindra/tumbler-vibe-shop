@@ -6,24 +6,12 @@ export interface Product {
   description: string;
   features: string[];
   specifications: {
-    capacity?: string;
+    capacity: string;
     material: string;
     dimensions: string;
     weight: string;
-    insulation?: string;
-    lidType?: string;
-    display?: string;
-    batteryLife?: string;
-    waterResistance?: string;
-    connectivity?: string;
-    powerOutput?: string;
-    brightness?: string;
-    resolution?: string;
-    driverSize?: string;
-    noiseCancelation?: string;
-    videoResolution?: string;
-    flightTime?: string;
-    range?: string;
+    insulation: string;
+    lidType: string;
   };
   colors: {
     name: string;

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -13,7 +14,10 @@ const Index = () => {
       <Navbar />
       
       <main className="flex-grow">
+        {/* Hero Section */}
         <HeroSection />
+        
+        {/* Featured Products */}
         <FeaturedProducts />
         
         {/* Features Highlight */}
@@ -26,7 +30,7 @@ const Index = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2">Free Shipping</h3>
                 <p className="text-gray-600 text-sm">
-                  On all orders over ₹1,800 within India.
+                  On all orders over ₹1,000 within India.
                 </p>
               </div>
               
@@ -63,15 +67,16 @@ const Index = () => {
           </div>
         </section>
         
+        {/* About Section */}
         <AboutSection />
         
         {/* Newsletter Section */}
         <section className="py-16 bg-gradient-to-r from-brand-blue to-brand-teal">
           <div className="container mx-auto px-4 max-w-3xl text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#8B4513]">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#FDE1D3]">
               Join Our Community
             </h2>
-            <p className="text-[#8B4513] mb-8 max-w-lg mx-auto">
+            <p className="text-[#FDE1D3]/80 mb-8 max-w-lg mx-auto">
               Subscribe to our newsletter for exclusive deals, new product announcements, and hydration tips.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">

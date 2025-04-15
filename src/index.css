@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -8,7 +9,7 @@
   :root {
     --background: 37 75% 97%;
     --foreground: 20 25% 23%;
-    
+
     --card: 0 0% 100%;
     --card-foreground: 20 25% 23%;
 
@@ -38,33 +39,33 @@
   }
 
   .dark {
-    --background: 20 25% 12%;
-    --foreground: 33 41% 82%;
-    
-    --card: 20 25% 12%;
-    --card-foreground: 33 41% 82%;
+    --background: 20 25% 23%;
+    --foreground: 37 75% 97%;
 
-    --popover: 20 25% 12%;
-    --popover-foreground: 33 41% 82%;
+    --card: 20 25% 23%;
+    --card-foreground: 37 75% 97%;
+
+    --popover: 20 25% 23%;
+    --popover-foreground: 37 75% 97%;
 
     --primary: 14 69% 62%;
-    --primary-foreground: 33 41% 82%;
+    --primary-foreground: 20 15% 10%;
 
-    --secondary: 20 15% 15%;
-    --secondary-foreground: 33 41% 82%;
+    --secondary: 60 67% 91%;
+    --secondary-foreground: 20 15% 10%;
 
     --muted: 20 15% 15%;
-    --muted-foreground: 25 16% 64%;
+    --muted-foreground: 20 10% 70%;
 
-    --accent: 14 55% 61%;
-    --accent-foreground: 33 41% 82%;
+    --accent: 14 69% 62%;
+    --accent-foreground: 20 15% 10%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 33 41% 82%;
+    --destructive-foreground: 37 75% 97%;
 
-    --border: 20 37% 26%;
-    --input: 20 37% 26%;
-    --ring: 14 55% 61%;
+    --border: 20 15% 30%;
+    --input: 20 15% 30%;
+    --ring: 14 69% 62%;
   }
 }
 

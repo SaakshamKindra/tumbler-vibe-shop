@@ -8,7 +8,7 @@ import CheckoutForm from '@/components/checkout/CheckoutForm';
 import { Toaster } from 'sonner';
 
 const CheckoutPage = () => {
-  const { cart, subtotal } = useCart();
+  const { cart } = useCart();
   const navigate = useNavigate();
   
   // If cart is empty, redirect to cart page

@@ -29,7 +29,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="product-image-container relative">
+        <div className="product-image-container">
           <img
             src={product.images[0]}
             alt={product.name}
