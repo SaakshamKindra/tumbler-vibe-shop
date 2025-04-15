@@ -20,18 +20,11 @@ const ProductDetail = () => {
   
   const product = getProduct(numericId);
   
-  const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   
   useEffect(() => {
-    if (product && product.colors.length > 0) {
-      // Set default color to the first available color
-      const defaultColor = product.colors.find(color => color.available);
-      setSelectedColor(defaultColor ? defaultColor.name : product.colors[0].name);
-    }
-    
     window.scrollTo(0, 0);
   }, [product]);
   
@@ -58,11 +51,12 @@ const ProductDetail = () => {
   }
   
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedColor);
-  };
-  
-  const handleColorChange = (colorName: string) => {
-    setSelectedColor(colorName);
+    // Default to first available color or first color in the list
+    const defaultColor = product.colors && product.colors.length > 0 ? 
+      (product.colors.find(color => color.available)?.name || product.colors[0].name) : 
+      "";
+    
+    addToCart(product, quantity, defaultColor);
   };
 
   const handleToggleLike = (e: React.MouseEvent) => {
@@ -184,31 +178,6 @@ const ProductDetail = () => {
                 {product.description}
               </p>
               
-              {/* Color Selection */}
-              <div className="mb-6">
-                <h3 className="font-semibold mb-2">Color: <span className="font-normal">{selectedColor}</span></h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map(color => (
-                    <button
-                      key={color.name}
-                      className={`w-10 h-10 rounded-full border-2 flex items-center justify-center ${
-                        selectedColor === color.name
-                          ? 'border-brand-teal'
-                          : 'border-transparent hover:border-gray-300'
-                      } ${!color.available ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                      style={{ backgroundColor: color.hex }}
-                      onClick={() => color.available && handleColorChange(color.name)}
-                      disabled={!color.available}
-                      aria-label={`Select ${color.name} color`}
-                    >
-                      {selectedColor === color.name && (
-                        <div className="w-3 h-3 rounded-full bg-white" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
               {/* Quantity & Add to Cart */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <div className="sm:w-1/3">
@@ -216,9 +185,9 @@ const ProductDetail = () => {
                   <ProductQuantity
                     quantity={quantity}
                     onDecrease={() => setQuantity(prev => Math.max(1, prev - 1))}
-                    onIncrease={() => setQuantity(prev => Math.min(product.inventory, prev + 1))}
+                    onIncrease={() => setQuantity(prev => Math.min(250, prev + 1))}
                     onChange={setQuantity}
-                    max={product.inventory}
+                    max={250}
                   />
                 </div>
                 
@@ -228,7 +197,6 @@ const ProductDetail = () => {
                     <Button
                       onClick={handleAddToCart}
                       className="flex-grow bg-brand-teal hover:bg-brand-teal/90 text-white"
-                      disabled={!selectedColor}
                     >
                       <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                     </Button>
@@ -254,11 +222,11 @@ const ProductDetail = () => {
               <div className="space-y-2 mb-8">
                 <div className="flex items-center text-sm text-gray-600">
                   <CircleCheck className="h-4 w-4 text-green-500 mr-2" />
-                  <span>In stock: {product.inventory} units available</span>
+                  <span>In stock: 250 units available</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Truck className="h-4 w-4 text-gray-500 mr-2" />
-                  <span>Free shipping on orders over ₹1000</span>
+                  <span>Free shipping on orders over ₹1,800</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <CircleCheck className="h-4 w-4 text-gray-500 mr-2" />
@@ -276,7 +244,7 @@ const ProductDetail = () => {
                 
                 <TabsContent value="features" className="pt-4">
                   <ul className="space-y-2">
-                    {product.features.map((feature, index) => (
+                    {product.features && product.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <CircleCheck className="h-5 w-5 text-brand-teal mr-2 mt-0.5 flex-shrink-0" />
                         <span>{feature}</span>
@@ -287,30 +255,34 @@ const ProductDetail = () => {
                 
                 <TabsContent value="specifications" className="pt-4">
                   <div className="space-y-2">
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Capacity</span>
-                      <span>{product.specifications.capacity}</span>
-                    </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Material</span>
-                      <span>{product.specifications.material}</span>
-                    </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Dimensions</span>
-                      <span>{product.specifications.dimensions}</span>
-                    </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Weight</span>
-                      <span>{product.specifications.weight}</span>
-                    </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Insulation</span>
-                      <span>{product.specifications.insulation}</span>
-                    </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Lid Type</span>
-                      <span>{product.specifications.lidType}</span>
-                    </div>
+                    {product.specifications && (
+                      <>
+                        <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                          <span className="font-medium text-gray-600">Capacity</span>
+                          <span>{product.specifications.capacity}</span>
+                        </div>
+                        <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                          <span className="font-medium text-gray-600">Material</span>
+                          <span>{product.specifications.material}</span>
+                        </div>
+                        <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                          <span className="font-medium text-gray-600">Dimensions</span>
+                          <span>{product.specifications.dimensions}</span>
+                        </div>
+                        <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                          <span className="font-medium text-gray-600">Weight</span>
+                          <span>{product.specifications.weight}</span>
+                        </div>
+                        <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                          <span className="font-medium text-gray-600">Insulation</span>
+                          <span>{product.specifications.insulation}</span>
+                        </div>
+                        <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                          <span className="font-medium text-gray-600">Lid Type</span>
+                          <span>{product.specifications.lidType}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </TabsContent>
                 
@@ -319,8 +291,8 @@ const ProductDetail = () => {
                     <div>
                       <h4 className="font-semibold mb-1">Shipping Information</h4>
                       <p className="text-gray-600 text-sm">
-                        We offer free standard shipping on all orders over ₹50. Orders under ₹50 have a flat shipping rate of ₹5.99. 
-                        Standard shipping typically takes 3-5 business days. Express shipping is available for ₹12.99 and takes 1-2 business days.
+                        We offer free standard shipping on all orders over ₹1,800. Orders under ₹1,800 have a flat shipping rate of ₹99. 
+                        Standard shipping typically takes 3-5 business days. Express shipping is available for ₹150 and takes 1-2 business days.
                       </p>
                     </div>
                     

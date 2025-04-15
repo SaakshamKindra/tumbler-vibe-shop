@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -311,14 +310,14 @@ const CustomerService = () => {
                           <div>
                             <h4 className="font-medium">Standard Shipping</h4>
                             <p className="text-gray-600">
-                              Free for orders over $50, otherwise $5.99<br />
+                              Free for orders over ₹1,800, otherwise ₹99<br />
                               Delivery in 3-5 business days
                             </p>
                           </div>
                           <div>
                             <h4 className="font-medium">Express Shipping</h4>
                             <p className="text-gray-600">
-                              $12.99 for all orders<br />
+                              ₹150 for all orders<br />
                               Delivery in 1-2 business days
                             </p>
                           </div>

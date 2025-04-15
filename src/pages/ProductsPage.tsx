@@ -7,14 +7,16 @@ import ProductGrid from '@/components/products/ProductGrid';
 import ProductFilters from '@/components/products/ProductFilters';
 import { useProducts } from '@/contexts/ProductsContext';
 import { Button } from '@/components/ui/button';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { Product } from '@/types';
 
 const ProductsPage = () => {
   const { products } = useProducts();
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [sortedProducts, setSortedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterMobileOpen, setFilterMobileOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("Featured");
   const location = useLocation();
   
   useEffect(() => {
@@ -48,6 +50,32 @@ const ProductsPage = () => {
     
     return () => clearTimeout(timer);
   }, [location.search, products]);
+  
+  // Apply sorting whenever filtered products change or sort option changes
+  useEffect(() => {
+    let sorted = [...filteredProducts];
+    
+    switch (sortBy) {
+      case "Price: Low to High":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case "Price: High to Low":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case "Newest":
+        sorted.sort((a, b) => (a.isNew === b.isNew) ? 0 : a.isNew ? -1 : 1);
+        break;
+      case "Best Selling":
+        sorted.sort((a, b) => (a.bestSeller === b.bestSeller) ? 0 : a.bestSeller ? -1 : 1);
+        break;
+      case "Featured":
+      default:
+        // No specific sorting, use the filtered order
+        break;
+    }
+    
+    setSortedProducts(sorted);
+  }, [filteredProducts, sortBy]);
   
   // Extract all categories from products
   const categories = Array.from(new Set(products.map(product => product.category)));
@@ -116,12 +144,16 @@ const ProductsPage = () => {
           }
           
           // Regular feature filtering
-          return product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
+          return product.features && product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
         })
       );
     }
     
     setFilteredProducts(filtered);
+  };
+  
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
   };
   
   return (
@@ -186,11 +218,15 @@ const ProductsPage = () => {
             <div className="flex-grow">
               <div className="mb-6 flex justify-between items-center">
                 <p className="text-brand-brown opacity-80">
-                  Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+                  Showing {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-brand-brown opacity-80 hidden sm:inline">Sort by:</span>
-                  <select className="border rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-terracotta text-brand-brown border-brand-terracotta bg-brand-cream">
+                  <select 
+                    className="border rounded py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-terracotta text-brand-brown border-brand-terracotta bg-brand-cream"
+                    value={sortBy}
+                    onChange={handleSortChange}
+                  >
                     <option>Featured</option>
                     <option>Price: Low to High</option>
                     <option>Price: High to Low</option>
@@ -200,7 +236,7 @@ const ProductsPage = () => {
                 </div>
               </div>
               
-              <ProductGrid products={filteredProducts} isLoading={isLoading} />
+              <ProductGrid products={sortedProducts} isLoading={isLoading} />
             </div>
           </div>
         </div>
