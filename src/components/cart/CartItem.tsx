@@ -12,7 +12,7 @@ interface CartItemProps {
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-  const { product, quantity } = item;
+  const { product, quantity, color } = item;
   const { removeFromCart, updateQuantity } = useCart();
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -57,7 +57,7 @@ const CartItem = ({ item }: CartItemProps) => {
           </div>
 
           <div className="mt-1 text-sm text-gray-500">
-            {product.specifications.capacity}
+            {color && <div>Color: {color}</div>}
           </div>
 
           <div className="mt-4 sm:mt-auto flex items-center justify-between">
