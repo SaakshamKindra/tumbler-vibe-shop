@@ -76,7 +76,7 @@ const CartSummary = () => {
       
       <div className="mt-6 text-xs text-gray-500">
         <p className="mb-2">
-          Free shipping on orders over ₹1800. Standard shipping takes 3-5 business days.
+          Free shipping on orders over ₹1,800. Standard shipping takes 3-5 business days.
         </p>
         <p>
           30-day easy returns. See our <a href="/customer-service#returns" className="text-brand-terracotta hover:underline">return policy</a> for more details.

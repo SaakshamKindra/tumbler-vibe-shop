@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -209,7 +210,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Truck className="h-4 w-4 text-gray-500 mr-2" />
-                  <span>Free shipping on orders over ₹1000</span>
+                  <span>Free shipping on orders over ₹1,800</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <CircleCheck className="h-4 w-4 text-gray-500 mr-2" />
@@ -269,8 +270,8 @@ const ProductDetail = () => {
                     <div>
                       <h4 className="font-semibold mb-1">Shipping Information</h4>
                       <p className="text-gray-600 text-sm">
-                        We offer free standard shipping on all orders over ₹50. Orders under ₹50 have a flat shipping rate of ₹5.99. 
-                        Standard shipping typically takes 3-5 business days. Express shipping is available for ₹12.99 and takes 1-2 business days.
+                        We offer free standard shipping on all orders over ₹1,800. Orders under ₹1,800 have a flat shipping rate of ₹99. 
+                        Standard shipping typically takes 3-5 business days. Express shipping is available for ₹150 and takes 1-2 business days.
                       </p>
                     </div>
                     
