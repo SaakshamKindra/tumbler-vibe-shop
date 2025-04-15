@@ -23,6 +23,8 @@ const CartItem = ({ item }: CartItemProps) => {
     removeFromCart(product.id);
   };
 
+  const colorObj = product.colors.find(c => c.name === color);
+
   return (
     <div className="flex flex-col sm:flex-row border-b border-gray-200 py-4">
       {/* Product Image */}
@@ -56,8 +58,17 @@ const CartItem = ({ item }: CartItemProps) => {
             </Button>
           </div>
 
+          <div className="mt-1 flex items-center">
+            <span className="text-sm text-gray-500 mr-2">Color:</span>
+            <div
+              className="w-4 h-4 rounded-full border border-gray-300"
+              style={{ backgroundColor: colorObj?.hex || '#999' }}
+            ></div>
+            <span className="ml-1 text-sm text-gray-500">{color}</span>
+          </div>
+
           <div className="mt-1 text-sm text-gray-500">
-            {color && <div>Color: {color}</div>}
+            {product.specifications.capacity}
           </div>
 
           <div className="mt-4 sm:mt-auto flex items-center justify-between">
@@ -70,7 +81,7 @@ const CartItem = ({ item }: CartItemProps) => {
             />
 
             <div className="font-semibold text-gray-900">
-              ₹{(product.price * quantity).toFixed(2)}
+              ${(product.price * quantity).toFixed(2)}
             </div>
           </div>
         </div>

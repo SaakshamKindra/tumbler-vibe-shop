@@ -1,308 +1,297 @@
+
 import { Product } from '@/types';
 
 export const products: Product[] = [
   {
     id: 1,
     name: "Arctic Explorer Tumbler",
-    price: 1299,
-    inventory: 250,
-    description: "Stay hydrated on your next adventure with the Arctic Explorer Tumbler. This durable, insulated tumbler keeps your drinks cold for up to 24 hours and hot for up to 12 hours. Perfect for hiking, camping, or everyday use.",
-    images: [
-      "/lovable-uploads/01-arctic-explorer-tumbler.webp",
-      "/lovable-uploads/01-arctic-explorer-tumbler-1.webp",
-      "/lovable-uploads/01-arctic-explorer-tumbler-2.webp",
-    ],
-    rating: 4.5,
-    isNew: true,
-    bestSeller: false,
-    category: "tumblers",
-    tags: ["tumbler", "insulated", "water bottle", "hiking", "camping"],
-    colors: [
-      { name: "Midnight Black", hex: "#000000", available: true },
-      { name: "Glacier White", hex: "#FFFFFF", available: true },
-      { name: "Ocean Blue", hex: "#0077BE", available: true },
-      { name: "Forest Green", hex: "#228B22", available: false },
+    price: 1400,
+    description: "Keep your drinks ice cold for up to 24 hours or hot for up to 12 hours with our premium vacuum-insulated Arctic Explorer tumbler. Perfect for outdoor adventures or everyday use.",
+    features: [
+      "Double-wall vacuum insulation",
+      "18/8 stainless steel construction",
+      "Sweat-free exterior",
+      "Copper lining for ultimate temperature retention",
+      "BPA-free materials",
+      "Dishwasher safe lid"
     ],
     specifications: {
-      material: "Stainless Steel",
-      capacity: "32 oz",
-      dimensions: "10 x 3.5 inches",
-      weight: "1 lb",
+      capacity: "30 oz (887 ml)",
+      material: "18/8 Stainless Steel",
+      dimensions: "3.5\" diameter x 7.5\" height",
+      weight: "0.8 lbs",
+      insulation: "Double-wall vacuum with copper lining",
+      lidType: "Press-in lid with sliding closure"
     },
+    colors: [
+      { name: "Ocean Blue", hex: "#0369A1", available: true },
+      { name: "Forest Green", hex: "#166534", available: true },
+      { name: "Cherry Red", hex: "#B91C1C", available: true },
+      { name: "Midnight Black", hex: "#1E293B", available: true },
+      { name: "Arctic White", hex: "#F8FAFC", available: true }
+    ],
+    images: [
+      "/lovable-uploads/5a7e70d9-2b15-4a5f-8316-c4ce15c95bf8.png",
+      "/lovable-uploads/2795299f-3085-4dc2-8073-92bc7b6db911.png",
+      "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png"
+    ],
+    category: "Premium",
+    tags: ["Outdoor", "Travel", "Bestseller", "Insulated"],
+    isNew: false,
+    bestSeller: true,
+    rating: 4.8,
+    inventory: 250
   },
   {
     id: 2,
-    name: "Solaris Smartwatch",
-    price: 4999,
-    inventory: 250,
-    description: "The Solaris Smartwatch is your ultimate companion for fitness and connectivity. Track your heart rate, steps, and sleep patterns. Receive notifications, control your music, and stay connected on the go.",
-    images: [
-      "/lovable-uploads/02-solaris-smartwatch.webp",
-      "/lovable-uploads/02-solaris-smartwatch-1.webp",
-      "/lovable-uploads/02-solaris-smartwatch-2.webp",
-    ],
-    rating: 4.8,
-    isNew: false,
-    bestSeller: true,
-    category: "smartwatches",
-    tags: ["smartwatch", "fitness tracker", "wearable", "health", "technology"],
-    colors: [
-      { name: "Space Gray", hex: "#808080", available: true },
-      { name: "Rose Gold", hex: "#B76E79", available: true },
-      { name: "Electric Blue", hex: "#7DF9FF", available: true },
-      { name: "Crimson Red", hex: "#DC143C", available: false },
+    name: "Urban Commuter Tumbler",
+    price: 600,
+    description: "Designed for the daily commuter, this sleek tumbler fits perfectly in most cup holders and keeps your morning coffee or tea at the ideal temperature during your commute.",
+    features: [
+      "Leak-proof flip lid",
+      "Non-slip silicone base",
+      "Fits standard cup holders",
+      "Ergonomic design",
+      "Easy one-handed operation",
+      "Keeps drinks hot for 6 hours or cold for 12 hours"
     ],
     specifications: {
-      display: "1.4-inch AMOLED",
-      batteryLife: "7 days",
-      waterResistance: "50m",
-      connectivity: "Bluetooth 5.0",
+      capacity: "16 oz (473 ml)",
+      material: "18/8 Stainless Steel",
+      dimensions: "2.95\" diameter x 6.5\" height",
+      weight: "0.6 lbs",
+      insulation: "Double-wall vacuum insulation",
+      lidType: "Flip-top with silicone seal"
     },
+    colors: [
+      { name: "Matte Black", hex: "#121212", available: true },
+      { name: "Brushed Steel", hex: "#9CA3AF", available: true },
+      { name: "Rose Gold", hex: "#FECDD3", available: true },
+      { name: "Navy Blue", hex: "#1E3A8A", available: true }
+    ],
+    images: [
+      "/lovable-uploads/682b13e5-fc99-44ee-ac08-3cf12b6fd6a0.png",
+      "/lovable-uploads/969ae606-a018-4743-8fb1-9f01eb1cde5c.png",
+      "/lovable-uploads/90727131-3103-40cd-91d9-1d1a6076f407.png"
+    ],
+    category: "Tumblers",
+    tags: ["Commuter", "Office", "Travel"],
+    isNew: false,
+    bestSeller: false,
+    rating: 4.5,
+    inventory: 175
   },
   {
     id: 3,
-    name: "Aurora Bluetooth Speaker",
-    price: 799,
-    inventory: 250,
-    description: "Immerse yourself in high-quality audio with the Aurora Bluetooth Speaker. This portable speaker delivers rich, clear sound with deep bass. Perfect for parties, picnics, or relaxing at home.",
-    images: [
-      "/lovable-uploads/03-aurora-bluetooth-speaker.webp",
-      "/lovable-uploads/03-aurora-bluetooth-speaker-1.webp",
-      "/lovable-uploads/03-aurora-bluetooth-speaker-2.webp",
-    ],
-    rating: 4.2,
-    isNew: false,
-    bestSeller: false,
-    category: "speakers",
-    tags: ["bluetooth speaker", "portable speaker", "audio", "music", "wireless"],
-    colors: [
-      { name: "Midnight Black", hex: "#000000", available: true },
-      { name: "Silver", hex: "#C0C0C0", available: true },
-      { name: "Sunset Orange", hex: "#FF8042", available: true },
-      { name: "Lime Green", hex: "#32CD32", available: false },
+    name: "Summit Series Tumbler",
+    price: 1400,
+    description: "Our premium Summit Series tumbler is built for extreme conditions. Whether scaling mountains or braving the daily grind, this tumbler provides unparalleled temperature retention.",
+    features: [
+      "Premium triple-layer insulation",
+      "Indestructible powder coating",
+      "Impact-resistant construction",
+      "Integrated handle",
+      "Wide mouth for easy filling with ice",
+      "Keeps drinks hot for 24 hours or cold for 48 hours"
     ],
     specifications: {
-      powerOutput: "10W",
-      batteryLife: "10 hours",
-      connectivity: "Bluetooth 5.0",
-      waterResistance: "IPX5",
+      capacity: "40 oz (1183 ml)",
+      material: "Premium 18/8 Stainless Steel",
+      dimensions: "3.75\" diameter x 10.5\" height",
+      weight: "1.2 lbs",
+      insulation: "Triple-layer vacuum insulation",
+      lidType: "Screw-on lid with magnetic slider closure"
     },
+    colors: [
+      { name: "Glacier White", hex: "#F8FAFC", available: true },
+      { name: "Carbon Black", hex: "#0F172A", available: true },
+      { name: "Summit Red", hex: "#DC2626", available: true },
+      { name: "Alpine Green", hex: "#15803D", available: true },
+      { name: "Cobalt Blue", hex: "#1D4ED8", available: true }
+    ],
+    images: [
+      "/lovable-uploads/2795299f-3085-4dc2-8073-92bc7b6db911.png",
+      "/lovable-uploads/5a7e70d9-2b15-4a5f-8316-c4ce15c95bf8.png",
+      "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png"
+    ],
+    category: "Premium",
+    tags: ["Outdoor", "Extreme", "Premium", "New"],
+    isNew: true,
+    bestSeller: false,
+    rating: 4.9,
+    inventory: 120
   },
   {
     id: 4,
-    name: "Emberglow Camping Lantern",
-    price: 599,
-    inventory: 250,
-    description: "Light up your campsite with the Emberglow Camping Lantern. This durable, weather-resistant lantern provides bright, warm light for all your outdoor adventures. Perfect for camping, hiking, or emergency use.",
-    images: [
-      "/lovable-uploads/04-emberglow-camping-lantern.webp",
-      "/lovable-uploads/04-emberglow-camping-lantern-1.webp",
-      "/lovable-uploads/04-emberglow-camping-lantern-2.webp",
-    ],
-    rating: 4.6,
-    isNew: true,
-    bestSeller: false,
-    category: "lanterns",
-    tags: ["camping lantern", "outdoor lighting", "hiking", "camping", "emergency"],
-    colors: [
-      { name: "Forest Green", hex: "#228B22", available: true },
-      { name: "Desert Sand", hex: "#F4A460", available: true },
-      { name: "Crimson Red", hex: "#DC143C", available: true },
-      { name: "Midnight Black", hex: "#000000", available: false },
+    name: "Kids Adventure Tumbler",
+    price: 500,
+    description: "Designed for young explorers, our Kids Adventure Tumbler is durable, leak-proof, and perfectly sized for little hands. BPA-free and built to withstand drops and tumbles.",
+    features: [
+      "Kid-friendly size and design",
+      "Drop-resistant construction",
+      "Spill-proof straw lid",
+      "Easy-grip sides",
+      "Dishwasher safe",
+      "Keeps drinks cold for 12 hours"
     ],
     specifications: {
-      brightness: "500 lumens",
-      batteryLife: "20 hours",
-      waterResistance: "IPX4",
-      material: "ABS Plastic",
+      capacity: "12 oz (355 ml)",
+      material: "18/8 Stainless Steel",
+      dimensions: "3\" diameter x 5.5\" height",
+      weight: "0.5 lbs",
+      insulation: "Double-wall vacuum insulation",
+      lidType: "Straw lid with silicone spout"
     },
+    colors: [
+      { name: "Sunshine Yellow", hex: "#EAB308", available: true },
+      { name: "Bubblegum Pink", hex: "#EC4899", available: true },
+      { name: "Rocket Blue", hex: "#2563EB", available: true },
+      { name: "Lime Green", hex: "#65A30D", available: true }
+    ],
+    images: [
+      "/lovable-uploads/026a47fb-97cc-4759-b6bc-cf15a4e40c46.png",
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
+      "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png",
+      "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png"
+    ],
+    category: "Kids",
+    tags: ["Kids", "School", "Outdoor"],
+    isNew: false,
+    bestSeller: true,
+    rating: 4.7,
+    inventory: 200
   },
   {
     id: 5,
-    name: "Celestial Wireless Headphones",
-    price: 2499,
-    inventory: 250,
-    description: "Experience crystal-clear audio with the Celestial Wireless Headphones. These comfortable, noise-canceling headphones are perfect for travel, work, or relaxing at home.",
-    images: [
-      "/lovable-uploads/05-celestial-wireless-headphones.webp",
-      "/lovable-uploads/05-celestial-wireless-headphones-1.webp",
-      "/lovable-uploads/05-celestial-wireless-headphones-2.webp",
-    ],
-    rating: 4.7,
-    isNew: false,
-    bestSeller: true,
-    category: "headphones",
-    tags: ["wireless headphones", "noise-canceling", "audio", "music", "travel"],
-    colors: [
-      { name: "Space Gray", hex: "#808080", available: true },
-      { name: "Rose Gold", hex: "#B76E79", available: true },
-      { name: "Sky Blue", hex: "#87CEEB", available: true },
-      { name: "Midnight Black", hex: "#000000", available: false },
+    name: "Coffee Enthusiast Tumbler",
+    price: 500,
+    description: "Specially designed for coffee lovers, with a leak-proof lid that preserves aromas and a ceramic-coated interior that won't impart metallic flavors to your precious brew.",
+    features: [
+      "Ceramic interior coating",
+      "Aroma-preserving lid design",
+      "Anti-slip texture",
+      "Temperature indicator",
+      "Optimal drinking spout design",
+      "Keeps coffee hot for 8 hours"
     ],
     specifications: {
-      driverSize: "40mm",
-      batteryLife: "30 hours",
-      connectivity: "Bluetooth 5.0",
-      noiseCancelation: "Active Noise Canceling",
+      capacity: "20 oz (591 ml)",
+      material: "18/8 Stainless Steel with Ceramic Interior",
+      dimensions: "3.25\" diameter x 7\" height",
+      weight: "0.7 lbs",
+      insulation: "Double-wall vacuum with copper layer",
+      lidType: "Twist lock lid with sipping port"
     },
+    colors: [
+      { name: "Espresso Brown", hex: "#44403C", available: true },
+      { name: "Cream", hex: "#FAFAF9", available: true },
+      { name: "Mocha Swirl", hex: "#78716C", available: true },
+      { name: "Cinnamon Red", hex: "#B91C1C", available: true }
+    ],
+    images: [
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
+      "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png",
+      "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png",
+      "/lovable-uploads/026a47fb-97cc-4759-b6bc-cf15a4e40c46.png"
+    ],
+    category: "Kids",
+    tags: ["Coffee", "Hot Drinks", "Premium"],
+    isNew: true,
+    bestSeller: false,
+    rating: 4.6,
+    inventory: 150
   },
   {
     id: 6,
-    name: "Terra Trekking Backpack",
-    price: 1799,
-    inventory: 250,
-    description: "Embark on your next adventure with the Terra Trekking Backpack. This spacious, durable backpack is designed for hiking, camping, and travel. With multiple compartments and weather-resistant materials, it's the perfect companion for any outdoor excursion.",
-    images: [
-      "/lovable-uploads/06-terra-trekking-backpack.webp",
-      "/lovable-uploads/06-terra-trekking-backpack-1.webp",
-      "/lovable-uploads/06-terra-trekking-backpack-2.webp",
-    ],
-    rating: 4.4,
-    isNew: true,
-    bestSeller: false,
-    category: "backpacks",
-    tags: ["trekking backpack", "hiking", "camping", "travel", "outdoor"],
-    colors: [
-      { name: "Forest Green", hex: "#228B22", available: true },
-      { name: "Desert Sand", hex: "#F4A460", available: true },
-      { name: "Ocean Blue", hex: "#0077BE", available: true },
-      { name: "Slate Gray", hex: "#708090", available: false },
+    name: "Slim Fit Tumbler",
+    price: 500,
+    description: "Our slimmest profile tumbler designed to fit in any cup holder while still providing excellent insulation. Perfect for those who are always on the move.",
+    features: [
+      "Ultra-slim design",
+      "Fits all standard cup holders",
+      "Secure seal lid",
+      "Non-slip base",
+      "Comfortable grip",
+      "Keeps drinks hot for 6 hours or cold for 12 hours"
     ],
     specifications: {
-      capacity: "50L",
-      material: "Nylon",
-      dimensions: "24 x 14 x 8 inches",
-      weight: "3 lbs",
+      capacity: "18 oz (532 ml)",
+      material: "18/8 Stainless Steel",
+      dimensions: "2.75\" diameter x 8\" height",
+      weight: "0.6 lbs",
+      insulation: "Double-wall vacuum insulation",
+      lidType: "Twist-on lid with sliding closure"
     },
+    colors: [
+      { name: "Silver", hex: "#E5E7EB", available: true },
+      { name: "Matte Black", hex: "#1F2937", available: true },
+      { name: "Seafoam Green", hex: "#10B981", available: true },
+      { name: "Coral", hex: "#F87171", available: true }
+    ],
+    images: [
+      "/lovable-uploads/e4222652-f54d-4547-97aa-dee4392b203f.png",
+      "/lovable-uploads/026a47fb-97cc-4759-b6bc-cf15a4e40c46.png",
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png",
+      "/lovable-uploads/e91b14cc-dafc-4bea-b3a8-7b5406c60fc0.png"
+    ],
+    category: "Kids",
+    tags: ["Travel", "Commuter", "Slimline"],
+    isNew: false,
+    bestSeller: true,
+    rating: 4.4,
+    inventory: 180
   },
   {
     id: 7,
-    name: "Nova Action Camera",
-    price: 3499,
-    inventory: 250,
-    description: "Capture your adventures in stunning detail with the Nova Action Camera. This rugged, waterproof camera is perfect for extreme sports, travel, and everyday use. Record videos in 4K and take high-resolution photos.",
-    images: [
-      "/lovable-uploads/07-nova-action-camera.webp",
-      "/lovable-uploads/07-nova-action-camera-1.webp",
-      "/lovable-uploads/07-nova-action-camera-2.webp",
-    ],
-    rating: 4.9,
-    isNew: false,
-    bestSeller: true,
-    category: "cameras",
-    tags: ["action camera", "waterproof", "4k video", "sports", "travel"],
-    colors: [
-      { name: "Midnight Black", hex: "#000000", available: true },
-      { name: "Silver", hex: "#C0C0C0", available: true },
-      { name: "Electric Blue", hex: "#7DF9FF", available: true },
-      { name: "Crimson Red", hex: "#DC143C", available: false },
+    name: "Glass Tumbler with Bamboo Lid",
+    price: 800,
+    description: "Elegant glass tumbler with bamboo lid, perfect for eco-conscious consumers who prefer the purity of glass. The bamboo lid adds a natural touch while providing excellent insulation.",
+    features: [
+      "Premium borosilicate glass construction",
+      "Natural bamboo lid",
+      "Silicone sleeve for protection and grip",
+      "Wide mouth for easy cleaning",
+      "100% BPA-free materials",
+      "Dishwasher safe (glass part only)"
     ],
     specifications: {
-      videoResolution: "4K",
-      waterResistance: "10m",
-      batteryLife: "2 hours",
-      connectivity: "Wi-Fi",
+      capacity: "16 oz (473 ml)",
+      material: "Borosilicate Glass, Bamboo, Silicone",
+      dimensions: "3\" diameter x 6\" height",
+      weight: "0.7 lbs",
+      insulation: "Single-wall with insulating sleeve",
+      lidType: "Screw-on bamboo lid with drinking hole"
     },
-  },
-  {
-    id: 8,
-    name: "Zenith Portable Projector",
-    price: 2999,
-    inventory: 250,
-    description: "Create a cinematic experience anywhere with the Zenith Portable Projector. This compact, lightweight projector delivers bright, clear images on any surface. Perfect for movies, presentations, or gaming.",
-    images: [
-      "/lovable-uploads/08-zenith-portable-projector.webp",
-      "/lovable-uploads/08-zenith-portable-projector-1.webp",
-      "/lovable-uploads/08-zenith-portable-projector-2.webp",
-    ],
-    rating: 4.3,
-    isNew: false,
-    bestSeller: false,
-    category: "projectors",
-    tags: ["portable projector", "home theater", "movies", "gaming", "presentation"],
     colors: [
-      { name: "Space Gray", hex: "#808080", available: true },
-      { name: "Glacier White", hex: "#FFFFFF", available: true },
-      { name: "Midnight Black", hex: "#000000", available: true },
-      { name: "Rose Gold", hex: "#B76E79", available: false },
+      { name: "Clear", hex: "#FFFFFF", available: true },
+      { name: "Blue Sleeve", hex: "#3B82F6", available: true },
+      { name: "Pink Sleeve", hex: "#EC4899", available: true },
+      { name: "Green Sleeve", hex: "#10B981", available: true }
     ],
-    specifications: {
-      brightness: "200 lumens",
-      resolution: "1080p",
-      batteryLife: "3 hours",
-      connectivity: "HDMI, USB, Wi-Fi",
-    },
-  },
-  {
-    id: 9,
-    name: "Quantum Fitness Tracker",
-    price: 999,
-    inventory: 250,
-    description: "Achieve your fitness goals with the Quantum Fitness Tracker. This sleek, lightweight tracker monitors your heart rate, steps, and sleep patterns. Stay motivated and track your progress with ease.",
     images: [
-      "/lovable-uploads/09-quantum-fitness-tracker.webp",
-      "/lovable-uploads/09-quantum-fitness-tracker-1.webp",
-      "/lovable-uploads/09-quantum-fitness-tracker-2.webp",
+      "/lovable-uploads/b9a90ec9-c2be-4358-9678-7685c06473aa.png",
+      "/lovable-uploads/5c2d8766-8f41-45ad-9ac6-d9459dcfc4e3.png",
+      "/lovable-uploads/607a5add-9ba3-43cb-af38-976d4d0e18a4.png"
     ],
-    rating: 4.6,
+    category: "Glass Tumblers",
+    tags: ["Eco-friendly", "Glass", "New"],
     isNew: true,
     bestSeller: false,
-    category: "fitness trackers",
-    tags: ["fitness tracker", "health", "wearable", "activity tracker", "sports"],
-    colors: [
-      { name: "Midnight Black", hex: "#000000", available: true },
-      { name: "Electric Blue", hex: "#7DF9FF", available: true },
-      { name: "Lime Green", hex: "#32CD32", available: true },
-      { name: "Crimson Red", hex: "#DC143C", available: false },
-    ],
-    specifications: {
-      display: "0.96-inch OLED",
-      batteryLife: "5 days",
-      waterResistance: "30m",
-      connectivity: "Bluetooth 4.2",
-    },
-  },
-  {
-    id: 10,
-    name: "Vortex Drone",
-    price: 5499,
-    inventory: 250,
-    description: "Take to the skies with the Vortex Drone. This easy-to-fly drone captures stunning aerial photos and videos. With its advanced features and long battery life, it's perfect for both beginners and experienced pilots.",
-    images: [
-      "/lovable-uploads/10-vortex-drone.webp",
-      "/lovable-uploads/10-vortex-drone-1.webp",
-      "/lovable-uploads/10-vortex-drone-2.webp",
-    ],
     rating: 4.7,
-    isNew: false,
-    bestSeller: true,
-    category: "drones",
-    tags: ["drone", "aerial photography", "video", "remote control", "technology"],
-    colors: [
-      { name: "Space Gray", hex: "#808080", available: true },
-      { name: "Glacier White", hex: "#FFFFFF", available: true },
-      { name: "Midnight Black", hex: "#000000", available: true },
-      { name: "Electric Blue", hex: "#7DF9FF", available: false },
-    ],
-    specifications: {
-      videoResolution: "4K",
-      flightTime: "25 minutes",
-      range: "2 km",
-      connectivity: "Wi-Fi",
-    },
-  },
+    inventory: 100
+  }
 ];
 
 export const getFeaturedProducts = (): Product[] => {
-  return products.filter(product => product.bestSeller).slice(0, 4);
+  return products.filter(product => product.bestSeller || product.isNew).slice(0, 4);
 };
 
 export const getNewArrivals = (): Product[] => {
-  return products.filter(product => product.isNew).slice(0, 4);
+  return products.filter(product => product.isNew);
 };
 
 export const getBestSellers = (): Product[] => {
-  return products.filter(product => product.bestSeller).slice(0, 4);
+  return products.filter(product => product.bestSeller);
 };
 
 export const getProductById = (id: number): Product | undefined => {
@@ -310,9 +299,9 @@ export const getProductById = (id: number): Product | undefined => {
 };
 
 export const getProductsByCategory = (category: string): Product[] => {
-  return products.filter(product => product.category === category);
+  return products.filter(product => product.category.toLowerCase() === category.toLowerCase());
 };
 
 export const getProductsByTag = (tag: string): Product[] => {
-  return products.filter(product => product.tags.includes(tag));
+  return products.filter(product => product.tags.some(t => t.toLowerCase() === tag.toLowerCase()));
 };

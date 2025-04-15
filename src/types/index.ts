@@ -5,7 +5,14 @@ export interface Product {
   price: number;
   description: string;
   features: string[];
-  specifications: ProductSpecifications;
+  specifications: {
+    capacity: string;
+    material: string;
+    dimensions: string;
+    weight: string;
+    insulation: string;
+    lidType: string;
+  };
   colors: {
     name: string;
     hex: string;
@@ -20,21 +27,51 @@ export interface Product {
   inventory: number;
 }
 
-interface BaseSpecifications {
-  material: string;
-  dimensions: string;
-  weight: string;
+export interface CartItem {
+  product: Product;
+  quantity: number;
+  color: string;
 }
 
-export type ProductSpecifications = BaseSpecifications & (
-  | { capacity: string; insulation: string; lidType: string }
-  | { display: string; batteryLife: string; waterResistance: string; connectivity: string }
-  | { powerOutput: string; batteryLife: string; connectivity: string; waterResistance: string }
-  | { brightness: string; batteryLife: string; waterResistance: string }
-  | { driverSize: string; batteryLife: string; connectivity: string; noiseCancelation: string }
-  | { capacity: string }
-  | { videoResolution: string; waterResistance: string; batteryLife: string; connectivity: string }
-  | { brightness: string; resolution: string; batteryLife: string; connectivity: string }
-  | { display: string; batteryLife: string; waterResistance: string; connectivity: string }
-  | { videoResolution: string; flightTime: string; range: string; connectivity: string }
-);
+export type CartContextType = {
+  cart: CartItem[];
+  addToCart: (product: Product, quantity: number, color: string) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
+  totalItems: number;
+  subtotal: number;
+};
+
+export type ProductsContextType = {
+  products: Product[];
+  featuredProducts: Product[];
+  newArrivals: Product[];
+  bestSellers: Product[];
+  getProduct: (id: number) => Product | undefined;
+  getProductsByCategory: (category: string) => Product[];
+  getProductsByTag: (tag: string) => Product[];
+};
+
+export interface CustomerAddress {
+  firstName: string;
+  lastName: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  phone: string;
+}
+
+export interface CheckoutFormData extends CustomerAddress {
+  email: string;
+  saveAddress: boolean;
+  shippingMethod: string;
+  paymentMethod: string;
+  cardName: string;
+  cardNumber: string;
+  cardExpiry: string;
+  cardCvc: string;
+}
