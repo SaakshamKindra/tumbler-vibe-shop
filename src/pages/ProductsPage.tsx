@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -83,7 +84,7 @@ const ProductsPage = () => {
     return acc;
   }, []);
   
-  const features = [
+  const features: string[] = [
     "Premium",
     "Tumblers",
     "Kids",
@@ -129,7 +130,7 @@ const ProductsPage = () => {
             return true;
           }
           
-          return product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
+          return product.features && product.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
         })
       );
     }

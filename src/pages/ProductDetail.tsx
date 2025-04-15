@@ -227,21 +227,26 @@ const ProductDetail = () => {
                 
                 <TabsContent value="features" className="pt-4">
                   <ul className="space-y-2">
-                    {product.features.map((feature, index) => (
+                    {product.features && product.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <CircleCheck className="h-5 w-5 text-brand-teal mr-2 mt-0.5 flex-shrink-0" />
                         <span>{feature}</span>
                       </li>
                     ))}
+                    {(!product.features || product.features.length === 0) && (
+                      <li className="text-gray-500">No features available for this product.</li>
+                    )}
                   </ul>
                 </TabsContent>
                 
                 <TabsContent value="specifications" className="pt-4">
                   <div className="space-y-2">
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Capacity</span>
-                      <span>{product.specifications.capacity}</span>
-                    </div>
+                    {product.specifications.capacity && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Capacity</span>
+                        <span>{product.specifications.capacity}</span>
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 border-b border-gray-100 py-2">
                       <span className="font-medium text-gray-600">Material</span>
                       <span>{product.specifications.material}</span>
@@ -254,14 +259,42 @@ const ProductDetail = () => {
                       <span className="font-medium text-gray-600">Weight</span>
                       <span>{product.specifications.weight}</span>
                     </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Insulation</span>
-                      <span>{product.specifications.insulation}</span>
-                    </div>
-                    <div className="grid grid-cols-2 border-b border-gray-100 py-2">
-                      <span className="font-medium text-gray-600">Lid Type</span>
-                      <span>{product.specifications.lidType}</span>
-                    </div>
+                    {product.specifications.insulation && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Insulation</span>
+                        <span>{product.specifications.insulation}</span>
+                      </div>
+                    )}
+                    {product.specifications.lidType && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Lid Type</span>
+                        <span>{product.specifications.lidType}</span>
+                      </div>
+                    )}
+                    {product.specifications.display && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Display</span>
+                        <span>{product.specifications.display}</span>
+                      </div>
+                    )}
+                    {product.specifications.batteryLife && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Battery Life</span>
+                        <span>{product.specifications.batteryLife}</span>
+                      </div>
+                    )}
+                    {product.specifications.waterResistance && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Water Resistance</span>
+                        <span>{product.specifications.waterResistance}</span>
+                      </div>
+                    )}
+                    {product.specifications.connectivity && (
+                      <div className="grid grid-cols-2 border-b border-gray-100 py-2">
+                        <span className="font-medium text-gray-600">Connectivity</span>
+                        <span>{product.specifications.connectivity}</span>
+                      </div>
+                    )}
                   </div>
                 </TabsContent>
                 
