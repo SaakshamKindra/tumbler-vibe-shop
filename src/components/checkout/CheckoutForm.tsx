@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
@@ -220,7 +219,7 @@ const CheckoutForm = () => {
       orderDate: orderDate.toISOString(),
       deliveryDate: deliveryDate.toISOString(),
       items: [...cart],
-      shipping: { ...formData },
+      shippingDetails: { ...formData },
       shippingMethod,
       subtotal,
       shipping,
