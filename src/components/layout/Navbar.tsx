@@ -1,15 +1,21 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
+import { useProducts } from '@/contexts/ProductsContext';
 
 const Navbar = () => {
   const { totalItems } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const { products } = useProducts();
   const location = useLocation();
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +34,53 @@ const Navbar = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  // Close search on route change
+  useEffect(() => {
+    setIsSearchOpen(false);
+    setSearchValue('');
+  }, [location]);
+
+  // Focus input when opening search
+  useEffect(() => {
+    if (isSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
+  // Close on escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsSearchOpen(false);
+        setSearchValue('');
+      }
+    };
+    if (isSearchOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchOpen]);
+
+  // Click outside to close
+  const searchWrapperRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+        setSearchValue('');
+      }
+    };
+    if (isSearchOpen) {
+      window.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => window.removeEventListener('mousedown', handleClickOutside);
+  }, [isSearchOpen]);
+
+  // Simple client-side filter for demonstration
+  const filteredProducts = searchValue
+    ? products.filter((p) => p.name.toLowerCase().includes(searchValue.toLowerCase()))
+    : [];
 
   return (
     <header
@@ -76,7 +129,12 @@ const Navbar = () => {
 
           {/* Desktop Right Side Icons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon" aria-label="Search">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Search"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search className="h-5 w-5" />
             </Button>
             <Link to="/account">
@@ -156,11 +214,83 @@ const Navbar = () => {
             >
               My Account
             </Link>
-            <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search className="h-4 w-4" />
               Search Products
             </Button>
           </nav>
+        </div>
+      )}
+
+      {/* Search Overlay */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-[60] bg-black/40 flex justify-center items-start pt-32">
+          <div
+            ref={searchWrapperRef}
+            className="bg-white w-full max-w-lg shadow-xl rounded-xl p-6 mx-3 relative animate-fade-in"
+          >
+            <button
+              className="absolute top-3 right-3 p-2 rounded-md hover:bg-brand-beige"
+              onClick={() => {
+                setIsSearchOpen(false);
+                setSearchValue('');
+              }}
+              aria-label="Close search"
+            >
+              <X className="h-5 w-5 text-brand-brown" />
+            </button>
+            <div className="flex items-center gap-2 mb-4">
+              <Search className="h-5 w-5 text-brand-brown" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="w-full px-3 py-2 border border-brand-terracotta rounded focus:outline-none text-brand-brown text-base"
+                placeholder="Search for products..."
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && filteredProducts.length) {
+                    navigate(`/product/${filteredProducts[0].id}`);
+                    setIsSearchOpen(false);
+                    setSearchValue('');
+                  }
+                }}
+              />
+            </div>
+            <div>
+              {searchValue ?
+                filteredProducts.length > 0 ? (
+                  <ul>
+                    {filteredProducts.slice(0, 8).map((product) => (
+                      <li
+                        key={product.id}
+                        className="py-2 px-2 rounded hover:bg-brand-beige cursor-pointer"
+                        onClick={() => {
+                          navigate(`/product/${product.id}`);
+                          setIsSearchOpen(false);
+                          setSearchValue('');
+                        }}
+                      >
+                        <span className="text-brand-brown font-medium">{product.name}</span>
+                        <span className="ml-2 text-xs text-brand-terracotta">{product.category}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-sm text-brand-brown py-4 text-center opacity-60">
+                    No products found.
+                  </div>
+                )
+                : (
+                  <div className="text-sm text-brand-brown py-4 text-center opacity-50">Type to search for products...</div>
+                )
+              }
+            </div>
+          </div>
         </div>
       )}
     </header>

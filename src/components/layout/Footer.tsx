@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-brand-beige text-brand-brown">
       <div className="container mx-auto px-4 py-12">
@@ -27,7 +27,7 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          
+
           {/* Column 2: Shop */}
           <div>
             <h3 className="text-lg font-bold mb-4">Shop</h3>
@@ -47,24 +47,9 @@ const Footer = () => {
                   New Arrivals
                 </Link>
               </li>
-              <li>
-                <Link to="/products?category=Tumbler" className="hover:text-brand-teal transition-colors">
-                  Tumblers
-                </Link>
-              </li>
-              <li>
-                <Link to="/products?category=Bottle" className="hover:text-brand-teal transition-colors">
-                  Water Bottles
-                </Link>
-              </li>
-              <li>
-                <Link to="/products?tag=Accessories" className="hover:text-brand-teal transition-colors">
-                  Accessories
-                </Link>
-              </li>
             </ul>
           </div>
-          
+
           {/* Column 3: Customer Service */}
           <div>
             <h3 className="text-lg font-bold mb-4">Customer Service</h3>
@@ -101,8 +86,8 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          
-          {/* Column 4: Contact */}
+
+          {/* Column 4: Contact + Feedback */}
           <div>
             <h3 className="text-lg font-bold mb-4">Contact</h3>
             <ul className="space-y-3 text-brand-brown/80 text-sm">
@@ -132,10 +117,15 @@ const Footer = () => {
                   +91 741 786 2083
                 </a>
               </li>
+              <li className="flex items-center">
+                <MessageSquare size={18} className="mr-2 flex-shrink-0 text-brand-teal" />
+                <Link to="/feedbacks" className="hover:text-brand-teal transition-colors">
+                  Feedback
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
-        
         <div className="border-t border-brand-brown/10 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-brand-brown/70 text-sm mb-4 md:mb-0">
             &copy; {currentYear} ASA artisans. All rights reserved.
