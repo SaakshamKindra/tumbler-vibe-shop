@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X } from 'lucide-react';
@@ -30,25 +29,21 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when changing routes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
-  // Close search on route change
   useEffect(() => {
     setIsSearchOpen(false);
     setSearchValue('');
   }, [location]);
 
-  // Focus input when opening search
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isSearchOpen]);
 
-  // Close on escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -62,7 +57,6 @@ const Navbar = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSearchOpen]);
 
-  // Click outside to close
   const searchWrapperRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -77,7 +71,6 @@ const Navbar = () => {
     return () => window.removeEventListener('mousedown', handleClickOutside);
   }, [isSearchOpen]);
 
-  // Simple client-side filter for demonstration
   const filteredProducts = searchValue
     ? products.filter((p) => p.name.toLowerCase().includes(searchValue.toLowerCase()))
     : [];
@@ -92,14 +85,12 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center">
             <h1 className="text-2xl font-bold text-brand-brown font-display">
               <span className="text-brand-terracotta">ASA</span> artisans
             </h1>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
@@ -127,7 +118,6 @@ const Navbar = () => {
             </Link>
           </nav>
 
-          {/* Desktop Right Side Icons */}
           <div className="hidden md:flex items-center space-x-4">
             <Button
               variant="ghost"
@@ -154,7 +144,6 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex items-center space-x-3 md:hidden">
             <Link to="/cart" className="relative">
               <Button variant="ghost" size="sm" aria-label="Cart">
@@ -178,7 +167,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-lg absolute top-full left-0 right-0 z-50 animate-fade-in">
           <nav className="container mx-auto py-4 px-6 flex flex-col space-y-4">
@@ -226,30 +214,19 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Search Overlay */}
       {isSearchOpen && (
         <div className="fixed inset-0 z-[60] bg-black/40 flex justify-center items-start pt-32">
           <div
             ref={searchWrapperRef}
-            className="bg-white w-full max-w-lg shadow-xl rounded-xl p-6 mx-3 relative animate-fade-in"
+            className="w-full max-w-xl mx-3 relative animate-fade-in"
           >
-            <button
-              className="absolute top-3 right-3 p-2 rounded-md hover:bg-brand-beige"
-              onClick={() => {
-                setIsSearchOpen(false);
-                setSearchValue('');
-              }}
-              aria-label="Close search"
-            >
-              <X className="h-5 w-5 text-brand-brown" />
-            </button>
-            <div className="flex items-center gap-2 mb-4">
-              <Search className="h-5 w-5 text-brand-brown" />
+            <div className="flex items-center bg-white rounded-full border border-brand-terracotta shadow-xl focus-within:ring-2 focus-within:ring-brand-terracotta px-4 py-2">
+              <Search className="h-6 w-6 text-brand-terracotta mr-3" />
               <input
                 ref={searchInputRef}
                 type="text"
-                className="w-full px-3 py-2 border border-brand-terracotta rounded focus:outline-none text-brand-brown text-base"
-                placeholder="Search for products..."
+                className="flex-1 bg-transparent border-none text-brand-brown text-lg outline-none placeholder:text-brand-brown/50"
+                placeholder="Search for products and queries..."
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}
                 onKeyDown={e => {
@@ -260,15 +237,26 @@ const Navbar = () => {
                   }
                 }}
               />
+              <button
+                className="ml-2 p-2 rounded-full hover:bg-brand-beige transition-colors"
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  setSearchValue('');
+                }}
+                aria-label="Close search"
+                type="button"
+              >
+                <X className="h-5 w-5 text-brand-brown" />
+              </button>
             </div>
-            <div>
+            <div className="bg-white rounded-xl shadow-lg mt-3">
               {searchValue ?
                 filteredProducts.length > 0 ? (
                   <ul>
                     {filteredProducts.slice(0, 8).map((product) => (
                       <li
                         key={product.id}
-                        className="py-2 px-2 rounded hover:bg-brand-beige cursor-pointer"
+                        className="py-2 px-4 rounded hover:bg-brand-beige cursor-pointer flex items-center"
                         onClick={() => {
                           navigate(`/product/${product.id}`);
                           setIsSearchOpen(false);
