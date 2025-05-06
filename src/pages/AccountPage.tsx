@@ -1,6 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SignOutDialog from '@/components/account/SignOutDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,17 +26,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { User, Package, Heart, CreditCard, Settings, Mail, Lock } from 'lucide-react';
+import { User, Package, Heart, CreditCard, Settings, Mail, Lock, LogOut } from 'lucide-react';
 import { toast } from "sonner";
 
 const AccountPage = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState('orders');
   
   useEffect(() => {
+    // Check if user is logged in from localStorage
     const userData = localStorage.getItem('userData');
     if (userData) {
       const parsedData = JSON.parse(userData);
@@ -98,8 +105,20 @@ const AccountPage = () => {
   };
   
   const handleSignout = () => {
+    // Don't actually remove user data, just notify and hide account content
     toast.info("You have been logged out");
     setIsLoggedIn(false);
+    setShowSignOutDialog(false);
+  };
+
+  const navigateToTab = (tab: string) => {
+    if (tab === 'orders') {
+      navigate('/empty-orders');
+    } else if (tab === 'wishlist') {
+      navigate('/wishlist');
+    } else {
+      setActiveTab(tab);
+    }
   };
   
   return (
@@ -123,103 +142,53 @@ const AccountPage = () => {
                     <CardTitle>{firstName} {lastName}</CardTitle>
                     <CardDescription>{email}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <Tabs defaultValue="orders" className="w-full">
-                      <TabsList className="grid grid-cols-1 w-full">
-                        <TabsTrigger value="orders" className="flex items-center justify-start pl-2 mb-1">
-                          <Package className="h-4 w-4 mr-2" /> Orders
-                        </TabsTrigger>
-                        <TabsTrigger value="wishlist" className="flex items-center justify-start pl-2 mb-1">
-                          <Heart className="h-4 w-4 mr-2" /> Wishlist
-                        </TabsTrigger>
-                        <TabsTrigger value="addresses" className="flex items-center justify-start pl-2 mb-1">
-                          <CreditCard className="h-4 w-4 mr-2" /> Addresses
-                        </TabsTrigger>
-                        <TabsTrigger value="settings" className="flex items-center justify-start pl-2 mb-1">
-                          <Settings className="h-4 w-4 mr-2" /> Account Settings
-                        </TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                    <Button 
-                      variant="outline" 
-                      className="w-full mt-6"
-                      onClick={handleSignout}
+                  <CardContent className="px-2 py-4">
+                    <Tabs 
+                      defaultValue={activeTab} 
+                      value={activeTab}
+                      onValueChange={navigateToTab}
+                      className="w-full"
                     >
-                      Sign Out
-                    </Button>
+                      <div className="flex flex-col space-y-1 w-full">
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start pl-3 font-normal"
+                          onClick={() => navigateToTab('orders')}
+                        >
+                          <Package className="h-4 w-4 mr-2" /> Orders
+                        </Button>
+                        
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start pl-3 font-normal"
+                          onClick={() => navigateToTab('wishlist')}
+                        >
+                          <Heart className="h-4 w-4 mr-2" /> Wishlist
+                        </Button>
+                        
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start pl-3 font-normal"
+                          onClick={() => navigateToTab('settings')}
+                        >
+                          <Settings className="h-4 w-4 mr-2" /> Account Settings
+                        </Button>
+
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start pl-3 font-normal text-red-500 hover:text-red-600 hover:bg-red-50"
+                          onClick={() => setShowSignOutDialog(true)}
+                        >
+                          <LogOut className="h-4 w-4 mr-2" /> Sign Out
+                        </Button>
+                      </div>
+                    </Tabs>
                   </CardContent>
                 </Card>
               </div>
               
               <div className="lg:col-span-3">
-                <Tabs defaultValue="orders">
-                  <TabsContent value="orders">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Your Orders</CardTitle>
-                        <CardDescription>
-                          View and track your recent orders
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-center py-12">
-                          <Package className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                          <h3 className="text-lg font-semibold">No orders yet</h3>
-                          <p className="text-gray-500 mb-4">
-                            You haven't placed any orders yet.
-                          </p>
-                          <Button asChild>
-                            <a href="/products">Start Shopping</a>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-                  
-                  <TabsContent value="wishlist">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Your Wishlist</CardTitle>
-                        <CardDescription>
-                          Products you've saved for later
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-center py-12">
-                          <Heart className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                          <h3 className="text-lg font-semibold">Your wishlist is empty</h3>
-                          <p className="text-gray-500 mb-4">
-                            Save your favorite products for later.
-                          </p>
-                          <Button asChild>
-                            <a href="/products">Explore Products</a>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-                  
-                  <TabsContent value="addresses">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Your Addresses</CardTitle>
-                        <CardDescription>
-                          Manage your saved addresses
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-center py-12">
-                          <CreditCard className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                          <h3 className="text-lg font-semibold">No addresses saved</h3>
-                          <p className="text-gray-500 mb-4">
-                            Add addresses to make checkout faster.
-                          </p>
-                          <Button>Add New Address</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-                  
+                <Tabs value={activeTab}>
                   <TabsContent value="settings">
                     <Card>
                       <CardHeader>
@@ -229,7 +198,32 @@ const AccountPage = () => {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="space-y-6">
+                        <div className="space-y-8">
+                          <div>
+                            <h3 className="font-semibold text-lg mb-4">Personal Information</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="setting-first-name">First Name</Label>
+                                <Input id="setting-first-name" defaultValue={firstName} />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="setting-last-name">Last Name</Label>
+                                <Input id="setting-last-name" defaultValue={lastName} />
+                              </div>
+                              <div className="space-y-2 md:col-span-2">
+                                <Label htmlFor="setting-email">Email</Label>
+                                <Input id="setting-email" type="email" defaultValue={email} />
+                              </div>
+                              <div className="space-y-2 md:col-span-2">
+                                <Label htmlFor="setting-phone">Phone Number</Label>
+                                <Input id="setting-phone" placeholder="Enter your phone number" />
+                              </div>
+                            </div>
+                            <Button className="mt-4 bg-brand-terracotta hover:bg-brand-terracotta/90">
+                              Save Changes
+                            </Button>
+                          </div>
+                          
                           <div>
                             <h3 className="font-semibold text-lg mb-4 flex items-center">
                               <Mail className="h-5 w-5 mr-2" /> Email Preferences
@@ -269,7 +263,21 @@ const AccountPage = () => {
                             <h3 className="font-semibold text-lg mb-4 flex items-center">
                               <Lock className="h-5 w-5 mr-2" /> Password
                             </h3>
-                            <Button variant="outline">Change Password</Button>
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="current-password">Current Password</Label>
+                                <Input id="current-password" type="password" />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="new-password">New Password</Label>
+                                <Input id="new-password" type="password" />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="confirm-new-password">Confirm New Password</Label>
+                                <Input id="confirm-new-password" type="password" />
+                              </div>
+                              <Button variant="outline">Change Password</Button>
+                            </div>
                           </div>
                           
                           <div>
@@ -408,6 +416,13 @@ const AccountPage = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Sign Out Confirmation Dialog */}
+      <SignOutDialog 
+        open={showSignOutDialog}
+        onOpenChange={setShowSignOutDialog}
+        onConfirm={handleSignout}
+      />
     </div>
   );
 };
