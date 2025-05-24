@@ -157,26 +157,36 @@ export const fetchProductById = async (id: number): Promise<Product | null> => {
 const transformDatabaseProducts = (dbProducts: DatabaseProduct[]): Product[] => {
   return dbProducts.map(dbProduct => {
     // Get the first specification (should only be one per product)
-    const spec = dbProduct.product_specifications[0] || {};
+    const spec = dbProduct.product_specifications?.[0] || {
+      capacity: null,
+      material: null,
+      dimensions: null,
+      weight: null,
+      insulation: null,
+      lid_type: null
+    };
     
     // Sort images by display order
-    const sortedImages = dbProduct.product_images
+    const sortedImages = (dbProduct.product_images || [])
       .sort((a, b) => a.display_order - b.display_order)
       .map(img => img.url);
     
     // Extract tags
-    const tags = dbProduct.product_tags.map(pt => pt.tags.name);
+    const tags = (dbProduct.product_tags || []).map(pt => pt.tags.name);
     
     // Extract features
-    const features = dbProduct.product_features.map(pf => pf.feature);
+    const features = (dbProduct.product_features || []).map(pf => pf.feature);
     
     // Get legacy ID
-    const legacyId = dbProduct.product_id_map[0]?.legacy_id || 0;
+    const legacyId = dbProduct.product_id_map?.[0]?.legacy_id || 0;
+
+    // Ensure colors array exists
+    const colors = dbProduct.product_colors || [];
 
     return {
       id: legacyId,
       name: dbProduct.name,
-      price: dbProduct.price,
+      price: dbProduct.price / 100, // Convert from cents to dollars
       description: dbProduct.description,
       features,
       specifications: {
@@ -187,7 +197,7 @@ const transformDatabaseProducts = (dbProducts: DatabaseProduct[]): Product[] => 
         insulation: spec.insulation || '',
         lidType: spec.lid_type || ''
       },
-      colors: dbProduct.product_colors,
+      colors,
       images: sortedImages,
       category: dbProduct.categories?.name || '',
       tags,

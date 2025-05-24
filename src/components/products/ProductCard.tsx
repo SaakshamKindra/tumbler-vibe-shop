@@ -13,13 +13,20 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const [isHovered, setIsHovered] = useState(false);
-  const defaultColor = product.colors.find(color => color.available)?.name || product.colors[0].name;
+  
+  // Safely get default color with fallback
+  const defaultColor = product.colors?.find(color => color.available)?.name || 
+                      product.colors?.[0]?.name || 
+                      'Default';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product, 1, defaultColor);
   };
+
+  // Handle missing images
+  const productImage = product.images?.[0] || '/placeholder.svg';
 
   return (
     <Link
@@ -29,9 +36,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="product-image-container">
+        <div className="product-image-container relative">
           <img
-            src={product.images[0]}
+            src={productImage}
             alt={product.name}
             className="w-full aspect-square object-cover"
           />
