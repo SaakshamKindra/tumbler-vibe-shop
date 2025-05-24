@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -12,7 +11,7 @@ import { Product } from '@/types';
 
 const ProductsPage = () => {
   const { products } = useProducts();
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [sortedProducts, setSortedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterMobileOpen, setFilterMobileOpen] = useState(false);
@@ -20,35 +19,36 @@ const ProductsPage = () => {
   const location = useLocation();
   
   useEffect(() => {
-    // Simulate loading
-    setIsLoading(true);
-    
-    // Parse URL query parameters
-    const searchParams = new URLSearchParams(location.search);
-    const categoryParam = searchParams.get('category');
-    const tagParam = searchParams.get('tag');
-    
-    // Apply initial filters from URL parameters
-    if (categoryParam) {
-      const filtered = products.filter(
-        product => product.category.toLowerCase() === categoryParam.toLowerCase()
-      );
-      setFilteredProducts(filtered);
-    } else if (tagParam) {
-      const filtered = products.filter(
-        product => product.tags.some(tag => tag.toLowerCase() === tagParam.toLowerCase())
-      );
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts(products);
+    if (products.length > 0) {
+      setIsLoading(true);
+      
+      // Parse URL query parameters
+      const searchParams = new URLSearchParams(location.search);
+      const categoryParam = searchParams.get('category');
+      const tagParam = searchParams.get('tag');
+      
+      // Apply initial filters from URL parameters
+      if (categoryParam) {
+        const filtered = products.filter(
+          product => product.category.toLowerCase() === categoryParam.toLowerCase()
+        );
+        setFilteredProducts(filtered);
+      } else if (tagParam) {
+        const filtered = products.filter(
+          product => product.tags.some(tag => tag.toLowerCase() === tagParam.toLowerCase())
+        );
+        setFilteredProducts(filtered);
+      } else {
+        setFilteredProducts(products);
+      }
+      
+      // Simulate API request time
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+      
+      return () => clearTimeout(timer);
     }
-    
-    // Simulate API request time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-    
-    return () => clearTimeout(timer);
   }, [location.search, products]);
   
   // Apply sorting whenever filtered products change or sort option changes
@@ -155,6 +155,22 @@ const ProductsPage = () => {
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
   };
+  
+  // Show loading state if products haven't loaded yet
+  if (products.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col bg-brand-cream">
+        <Navbar />
+        <main className="flex-grow pt-20 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-brand-brown mb-4">Loading Products...</h2>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-terracotta mx-auto"></div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen flex flex-col bg-brand-cream">
