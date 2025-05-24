@@ -7,6 +7,7 @@ import SignOutDialog from '@/components/account/SignOutDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Tabs,
   TabsContent,
@@ -31,46 +32,41 @@ import { toast } from "sonner";
 
 const AccountPage = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
   const [activeTab, setActiveTab] = useState('orders');
   
+  // Get auth state from context
+  const { user, session, signIn, signUp, signOut, loading } = useAuth();
+  
+  // Form states
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  
+  // Check if user data is available in local storage (for backward compatibility)
   useEffect(() => {
-    // Check if user is logged in from localStorage
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const parsedData = JSON.parse(userData);
-      setFirstName(parsedData.firstName);
-      setLastName(parsedData.lastName);
-      setEmail(parsedData.email);
-      setIsLoggedIn(true);
+    if (user) {
+      // If we have user data from Supabase auth, try to get profile data
+      const userData = localStorage.getItem('userData');
+      if (userData) {
+        const parsedData = JSON.parse(userData);
+        setFirstName(parsedData.firstName || '');
+        setLastName(parsedData.lastName || '');
+        setEmail(user.email || parsedData.email || '');
+      } else {
+        // Default to email from auth
+        setEmail(user.email || '');
+      }
     }
-  }, []);
+  }, [user]);
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const emailInput = (document.getElementById('email') as HTMLInputElement).value;
     const passwordInput = (document.getElementById('password') as HTMLInputElement).value;
     
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const parsedData = JSON.parse(userData);
-      if (parsedData.email === emailInput) {
-        toast.success("Successfully logged in!");
-        setFirstName(parsedData.firstName);
-        setLastName(parsedData.lastName);
-        setEmail(parsedData.email);
-        setIsLoggedIn(true);
-      } else {
-        toast.error("Invalid email or password");
-      }
-    } else {
-      toast.error("No account found. Please sign up.");
-    }
+    signIn(emailInput, passwordInput);
   };
   
   const handleSignup = (e: React.FormEvent) => {
@@ -86,28 +82,16 @@ const AccountPage = () => {
       return;
     }
     
-    const userData = {
+    signUp(emailInput, passwordInput, {
       firstName: firstNameInput,
-      lastName: lastNameInput,
-      email: emailInput,
-    };
-    
-    localStorage.setItem('userData', JSON.stringify(userData));
-    
-    setFirstName(firstNameInput);
-    setLastName(lastNameInput);
-    setEmail(emailInput);
-    
-    toast.success("Account created successfully!");
-    setIsLoggedIn(true);
+      lastName: lastNameInput
+    });
     
     setShowWelcomeDialog(true);
   };
   
   const handleSignout = () => {
-    // Don't actually remove user data, just notify and hide account content
-    toast.info("You have been logged out");
-    setIsLoggedIn(false);
+    signOut();
     setShowSignOutDialog(false);
   };
 
@@ -128,10 +112,14 @@ const AccountPage = () => {
       <main className="flex-grow pt-24 pb-16">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold mb-8">
-            {isLoggedIn ? 'My Account' : 'Account'}
+            {session ? 'My Account' : 'Account'}
           </h1>
           
-          {isLoggedIn ? (
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-terracotta"></div>
+            </div>
+          ) : session ? (
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               <div className="lg:col-span-1">
                 <Card>
@@ -212,7 +200,7 @@ const AccountPage = () => {
                               </div>
                               <div className="space-y-2 md:col-span-2">
                                 <Label htmlFor="setting-email">Email</Label>
-                                <Input id="setting-email" type="email" defaultValue={email} />
+                                <Input id="setting-email" type="email" defaultValue={email} readOnly />
                               </div>
                               <div className="space-y-2 md:col-span-2">
                                 <Label htmlFor="setting-phone">Phone Number</Label>
