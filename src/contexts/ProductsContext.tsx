@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { ProductsContextType, Product } from '@/types';
-import { products } from '@/data/products';
 import { ProductService } from '@/services/productService';
 import staticProducts from '@/data/staticProducts';
 

@@ -63,51 +63,10 @@ export class ProductService {
     return this.transformDatabaseProduct(data);
   }
 
-  // Get featured products
-  static async getFeaturedProducts(): Promise<Product[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        categories(name),
-        product_specifications(*),
-        product_colors(*),
-        product_images(*),
-        product_features(*),
-        product_tags(tags(name))
-      `)
-      .or('best_seller.eq.true,is_new.eq.true')
-      .limit(4);
-
-    if (error) throw error;
-
-    return data?.map(this.transformDatabaseProduct) || [];
-  }
-
-  // Get products by category
-  static async getProductsByCategory(categoryName: string): Promise<Product[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        categories!inner(name),
-        product_specifications(*),
-        product_colors(*),
-        product_images(*),
-        product_features(*),
-        product_tags(tags(name))
-      `)
-      .eq('categories.name', categoryName);
-
-    if (error) throw error;
-
-    return data?.map(this.transformDatabaseProduct) || [];
-  }
-
   // Transform database product to frontend Product interface
   private static transformDatabaseProduct(dbProduct: any): Product {
-    // Get legacy ID from mapping
-    const legacyId = this.getLegacyIdFromUuid(dbProduct.id);
+    // Get legacy ID from mapping or generate one
+    const legacyId = ProductService.getLegacyIdFromUuid(dbProduct.id);
 
     return {
       id: legacyId,
@@ -141,7 +100,6 @@ export class ProductService {
   // Helper to maintain legacy ID compatibility
   private static getLegacyIdFromUuid(uuid: string): number {
     // This is a simple hash function to create consistent legacy IDs
-    // In a real implementation, you'd query the product_id_map table
     let hash = 0;
     for (let i = 0; i < uuid.length; i++) {
       const char = uuid.charCodeAt(i);

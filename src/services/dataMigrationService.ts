@@ -10,7 +10,7 @@ export class DataMigrationService {
       // First, get or create categories
       const categoryMap = await this.migrateCategories();
       
-      // Then, get or create tags
+      // Then, get or create tags  
       const tagMap = await this.migrateTags();
       
       // Finally, migrate products with all their related data
@@ -140,24 +140,24 @@ export class DataMigrationService {
           });
         
         // Create product features
-        for (let i = 0; i < product.features.length; i++) {
+        for (const feature of product.features) {
           await supabase
             .from('product_features')
             .insert({
               product_id: productId,
-              feature: product.features[i]
+              feature: feature
             });
         }
         
         // Create product colors
-        for (let i = 0; i < product.colors.length; i++) {
+        for (const color of product.colors) {
           await supabase
             .from('product_colors')
             .insert({
               product_id: productId,
-              name: product.colors[i].name,
-              hex: product.colors[i].hex,
-              available: product.colors[i].available
+              name: color.name,
+              hex: color.hex,
+              available: color.available
             });
         }
         
