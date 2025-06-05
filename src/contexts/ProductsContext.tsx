@@ -1,66 +1,42 @@
 
-import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { ProductsContextType, Product } from '@/types';
-import { ProductService } from '@/services/productService';
-import staticProducts from '@/data/staticProducts';
+import { 
+  products, 
+  getFeaturedProducts, 
+  getNewArrivals, 
+  getBestSellers,
+  getProductById,
+  getProductsByCategory,
+  getProductsByTag
+} from '@/data/products';
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
-export const ProductsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        setLoading(true);
-        await ProductService.ensureDataMigrated();
-        const allProducts = await ProductService.getAllProducts();
-        setProducts(allProducts);
-      } catch (error) {
-        console.error('Error loading products:', error);
-        // Fallback to static data if database fails
-        setProducts(staticProducts);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, []);
-
-  const featuredProducts = products.filter(product => product.bestSeller || product.isNew).slice(0, 4);
-  const newArrivals = products.filter(product => product.isNew);
-  const bestSellers = products.filter(product => product.bestSeller);
+export const ProductsProvider = ({ children }: { children: ReactNode }) => {
+  const featuredProducts = getFeaturedProducts();
+  const newArrivals = getNewArrivals();
+  const bestSellers = getBestSellers();
 
   const getProduct = (id: number): Product | undefined => {
-    return products.find(product => product.id === id);
+    return getProductById(id);
   };
 
-  const getProductsByCategory = (category: string): Product[] => {
-    return products.filter(product => 
-      product.category.toLowerCase() === category.toLowerCase()
-    );
-  };
-
-  const getProductsByTag = (tag: string): Product[] => {
-    return products.filter(product => 
-      product.tags.some(t => t.toLowerCase() === tag.toLowerCase())
-    );
-  };
-
-  const value = {
+  const value: ProductsContextType = {
     products,
     featuredProducts,
     newArrivals,
     bestSellers,
     getProduct,
     getProductsByCategory,
-    getProductsByTag,
-    loading
+    getProductsByTag
   };
 
-  return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>;
+  return (
+    <ProductsContext.Provider value={value}>
+      {children}
+    </ProductsContext.Provider>
+  );
 };
 
 export const useProducts = (): ProductsContextType => {
