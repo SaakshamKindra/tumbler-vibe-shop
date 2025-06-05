@@ -63,6 +63,47 @@ export class ProductService {
     return this.transformDatabaseProduct(data);
   }
 
+  // Get featured products
+  static async getFeaturedProducts(): Promise<Product[]> {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        categories(name),
+        product_specifications(*),
+        product_colors(*),
+        product_images(*),
+        product_features(*),
+        product_tags(tags(name))
+      `)
+      .or('best_seller.eq.true,is_new.eq.true')
+      .limit(4);
+
+    if (error) throw error;
+
+    return data?.map(this.transformDatabaseProduct) || [];
+  }
+
+  // Get products by category
+  static async getProductsByCategory(categoryName: string): Promise<Product[]> {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        categories!inner(name),
+        product_specifications(*),
+        product_colors(*),
+        product_images(*),
+        product_features(*),
+        product_tags(tags(name))
+      `)
+      .eq('categories.name', categoryName);
+
+    if (error) throw error;
+
+    return data?.map(this.transformDatabaseProduct) || [];
+  }
+
   // Transform database product to frontend Product interface
   private static transformDatabaseProduct(dbProduct: any): Product {
     // Get legacy ID from mapping or generate one
