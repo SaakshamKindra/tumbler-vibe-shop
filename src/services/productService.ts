@@ -14,17 +14,16 @@ export class ProductService {
         product_colors(*),
         product_images(*),
         product_features(*),
-        product_tags(tags(name)),
-        inventory(quantity)
+        product_tags(tags(name))
       `)
-      .eq('status', 'active')
-      .eq('visibility', 'visible')
       .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching products:', error);
       throw error;
     }
+
+    if (!productsData) return [];
 
     // Transform database products to match frontend Product interface
     return productsData.map(this.transformDatabaseProduct);
@@ -54,8 +53,7 @@ export class ProductService {
         product_colors(*),
         product_images(*),
         product_features(*),
-        product_tags(tags(name)),
-        inventory(quantity)
+        product_tags(tags(name))
       `)
       .eq('id', uuid)
       .single();
@@ -76,17 +74,14 @@ export class ProductService {
         product_colors(*),
         product_images(*),
         product_features(*),
-        product_tags(tags(name)),
-        inventory(quantity)
+        product_tags(tags(name))
       `)
-      .eq('status', 'active')
-      .eq('visibility', 'visible')
       .or('best_seller.eq.true,is_new.eq.true')
       .limit(4);
 
     if (error) throw error;
 
-    return data.map(this.transformDatabaseProduct);
+    return data?.map(this.transformDatabaseProduct) || [];
   }
 
   // Get products by category
@@ -100,16 +95,13 @@ export class ProductService {
         product_colors(*),
         product_images(*),
         product_features(*),
-        product_tags(tags(name)),
-        inventory(quantity)
+        product_tags(tags(name))
       `)
-      .eq('status', 'active')
-      .eq('visibility', 'visible')
       .eq('categories.name', categoryName);
 
     if (error) throw error;
 
-    return data.map(this.transformDatabaseProduct);
+    return data?.map(this.transformDatabaseProduct) || [];
   }
 
   // Transform database product to frontend Product interface
@@ -119,12 +111,10 @@ export class ProductService {
 
     return {
       id: legacyId,
-      name: dbProduct.name,
-      price: dbProduct.base_price,
-      description: dbProduct.description,
-      features: dbProduct.product_features
-        ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
-        ?.map((f: any) => f.feature) || [],
+      name: dbProduct.name || '',
+      price: dbProduct.price || 0,
+      description: dbProduct.description || '',
+      features: dbProduct.product_features?.map((f: any) => f.feature) || [],
       specifications: {
         capacity: dbProduct.product_specifications?.[0]?.capacity || '',
         material: dbProduct.product_specifications?.[0]?.material || '',
@@ -133,22 +123,18 @@ export class ProductService {
         insulation: dbProduct.product_specifications?.[0]?.insulation || '',
         lidType: dbProduct.product_specifications?.[0]?.lid_type || ''
       },
-      colors: dbProduct.product_colors
-        ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
-        ?.map((c: any) => ({
-          name: c.name,
-          hex: c.hex,
-          available: c.is_available
-        })) || [],
-      images: dbProduct.product_images
-        ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
-        ?.map((img: any) => img.url) || [],
+      colors: dbProduct.product_colors?.map((c: any) => ({
+        name: c.name,
+        hex: c.hex,
+        available: c.available
+      })) || [],
+      images: dbProduct.product_images?.map((img: any) => img.url) || [],
       category: dbProduct.categories?.name || '',
       tags: dbProduct.product_tags?.map((pt: any) => pt.tags?.name).filter(Boolean) || [],
-      isNew: dbProduct.is_new,
-      bestSeller: dbProduct.best_seller,
-      rating: 4.5, // Default rating, will be calculated from reviews later
-      inventory: dbProduct.inventory?.[0]?.quantity || 0
+      isNew: dbProduct.is_new || false,
+      bestSeller: dbProduct.best_seller || false,
+      rating: dbProduct.rating || 4.5,
+      inventory: dbProduct.inventory || 0
     };
   }
 

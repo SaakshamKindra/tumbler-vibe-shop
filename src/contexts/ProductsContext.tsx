@@ -1,20 +1,13 @@
+
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { ProductsContextType, Product } from '@/types';
-import { 
-  products, 
-  getFeaturedProducts, 
-  getNewArrivals, 
-  getBestSellers,
-  getProductById,
-  getProductsByCategory,
-  getProductsByTag
-} from '@/data/products';
+import { products } from '@/data/products';
 import { ProductService } from '@/services/productService';
 import staticProducts from '@/data/staticProducts';
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
 
-export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ProductsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 

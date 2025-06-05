@@ -28,12 +28,10 @@ export class DataMigrationService {
     const categoryMap: Record<string, string> = {};
     
     for (const categoryName of uniqueCategories) {
-      const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
-      
       const { data: existingCategory } = await supabase
         .from('categories')
         .select('id, name')
-        .eq('slug', slug)
+        .eq('name', categoryName)
         .single();
       
       if (existingCategory) {
@@ -42,10 +40,7 @@ export class DataMigrationService {
         const { data: newCategory, error } = await supabase
           .from('categories')
           .insert({
-            name: categoryName,
-            slug: slug,
-            description: `${categoryName} products`,
-            is_active: true
+            name: categoryName
           })
           .select('id')
           .single();
@@ -63,12 +58,10 @@ export class DataMigrationService {
     const tagMap: Record<string, string> = {};
     
     for (const tagName of allTags) {
-      const slug = tagName.toLowerCase().replace(/\s+/g, '-');
-      
       const { data: existingTag } = await supabase
         .from('tags')
         .select('id, name')
-        .eq('slug', slug)
+        .eq('name', tagName)
         .single();
       
       if (existingTag) {
@@ -77,9 +70,7 @@ export class DataMigrationService {
         const { data: newTag, error } = await supabase
           .from('tags')
           .insert({
-            name: tagName,
-            slug: slug,
-            color: this.getTagColor(tagName)
+            name: tagName
           })
           .select('id')
           .single();
@@ -112,14 +103,13 @@ export class DataMigrationService {
           .from('products')
           .insert({
             name: product.name,
-            slug: product.name.toLowerCase().replace(/\s+/g, '-'),
             description: product.description,
-            base_price: product.price,
+            price: product.price,
             category_id: categoryMap[product.category],
             is_new: product.isNew,
             best_seller: product.bestSeller,
-            status: 'active',
-            visibility: 'visible'
+            rating: product.rating,
+            inventory: product.inventory
           })
           .select('id')
           .single();
@@ -155,8 +145,7 @@ export class DataMigrationService {
             .from('product_features')
             .insert({
               product_id: productId,
-              feature: product.features[i],
-              sort_order: i
+              feature: product.features[i]
             });
         }
         
@@ -168,8 +157,7 @@ export class DataMigrationService {
               product_id: productId,
               name: product.colors[i].name,
               hex: product.colors[i].hex,
-              is_available: product.colors[i].available,
-              sort_order: i
+              available: product.colors[i].available
             });
         }
         
@@ -180,9 +168,7 @@ export class DataMigrationService {
             .insert({
               product_id: productId,
               url: product.images[i],
-              alt_text: `${product.name} - Image ${i + 1}`,
-              is_primary: i === 0,
-              sort_order: i
+              display_order: i
             });
         }
         
@@ -198,44 +184,11 @@ export class DataMigrationService {
           }
         }
         
-        // Create inventory record
-        await supabase
-          .from('inventory')
-          .insert({
-            product_id: productId,
-            quantity: product.inventory,
-            low_stock_threshold: 10,
-            track_quantity: true
-          });
-        
         console.log(`Successfully migrated product: ${product.name}`);
         
       } catch (error) {
         console.error(`Failed to migrate product ${product.name}:`, error);
       }
     }
-  }
-
-  private static getTagColor(tagName: string): string {
-    const colorMap: Record<string, string> = {
-      'Outdoor': '#059669',
-      'Travel': '#0284c7',
-      'Bestseller': '#dc2626',
-      'Insulated': '#7c3aed',
-      'Commuter': '#ea580c',
-      'Office': '#4338ca',
-      'Extreme': '#be123c',
-      'Premium': '#059669',
-      'New': '#0891b2',
-      'Kids': '#ca8a04',
-      'School': '#4338ca',
-      'Coffee': '#92400e',
-      'Hot Drinks': '#dc2626',
-      'Slimline': '#6366f1',
-      'Eco-friendly': '#059669',
-      'Glass': '#0284c7'
-    };
-    
-    return colorMap[tagName] || '#6B7280';
   }
 }
