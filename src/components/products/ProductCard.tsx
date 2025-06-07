@@ -13,13 +13,19 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const [isHovered, setIsHovered] = useState(false);
-  const defaultColor = product.colors.find(color => color.available)?.name || product.colors[0].name;
+  
+  // Safe fallback for colors - handle undefined or empty arrays
+  const availableColor = product.colors?.find(color => color.available);
+  const defaultColor = availableColor?.name || product.colors?.[0]?.name || 'Default';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product, 1, defaultColor);
   };
+
+  // Safe fallback for images
+  const productImage = product.images?.[0] || '/placeholder.svg';
 
   return (
     <Link
@@ -29,9 +35,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="product-image-container">
+        <div className="product-image-container relative">
           <img
-            src={product.images[0]}
+            src={productImage}
             alt={product.name}
             className="w-full aspect-square object-cover"
           />
@@ -91,7 +97,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <svg
                   key={i}
                   className={`w-3 h-3 ${
-                    i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'
+                    i < Math.floor(product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -101,7 +107,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-gray-500 ml-1">{product.rating.toFixed(1)}</span>
+            <span className="text-xs text-gray-500 ml-1">{(product.rating || 0).toFixed(1)}</span>
           </div>
         </div>
       </div>
