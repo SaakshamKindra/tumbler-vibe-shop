@@ -1,14 +1,55 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { Product, CartItem } from '@/types';
-import { 
-  SupabaseProduct, 
-  UserProfile, 
-  CartItem as SupabaseCartItem, 
-  Order, 
-  OrderItem, 
-  Review 
-} from '@/types/supabase';
+
+// Define interfaces for database operations
+interface DatabaseCartItem {
+  id: string;
+  quantity: number;
+  customization_data: any;
+  products: {
+    id: string;
+    name: string;
+    price: number;
+    description: string;
+    image_url: string;
+  } | null;
+}
+
+interface DatabaseUserProfile {
+  id: string;
+  role: string;
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+}
+
+interface DatabaseOrder {
+  id: string;
+  total_amount: number;
+  status: string;
+  created_at: string;
+  payment_status: string;
+  payment_method: string;
+  shipping_address: any;
+  user_profiles?: {
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+  } | null;
+}
+
+interface DatabaseOrderItem {
+  id: string;
+  quantity: number;
+  unit_price: number;
+  customization_data: any;
+  products: {
+    id: string;
+    name: string;
+    image_url: string;
+  } | null;
+}
 
 // User related functions
 export const getCurrentUser = async () => {
@@ -23,7 +64,7 @@ export const getUserCart = async () => {
   if (!user) return [];
   
   const { data, error } = await supabase
-    .from('cart' as any)
+    .from('cart')
     .select(`
       id,
       quantity,
@@ -46,11 +87,13 @@ export const getUserCart = async () => {
   if (!data) return [];
   
   // Transform the data to match your existing CartItem format
-  return data.map((item: any) => ({
+  const cartData = data as DatabaseCartItem[];
+  
+  return cartData.map((item) => ({
     product: {
       id: item.products?.id || '',
       name: item.products?.name || '',
-      price: parseFloat(item.products?.price || '0'),
+      price: parseFloat(String(item.products?.price || '0')),
       description: item.products?.description || '',
       images: [item.products?.image_url || ''],
       // Add other required fields with defaults
@@ -86,7 +129,7 @@ export const addToCart = async (product: Product, quantity: number, color: strin
   
   // Check if product exists in cart
   const { data: existingItem, error: selectError } = await supabase
-    .from('cart' as any)
+    .from('cart')
     .select('id, quantity')
     .eq('user_id', user.id)
     .eq('product_id', product.id)
@@ -96,22 +139,24 @@ export const addToCart = async (product: Product, quantity: number, color: strin
     throw selectError;
   }
     
-  if (existingItem && existingItem.id) {
+  const existingCartItem = existingItem as { id: string; quantity: number } | null;
+    
+  if (existingCartItem?.id) {
     // Update quantity
     const { error } = await supabase
-      .from('cart' as any)
+      .from('cart')
       .update({ 
-        quantity: (existingItem.quantity || 0) + quantity,
+        quantity: (existingCartItem.quantity || 0) + quantity,
         customization_data: customization,
         updated_at: new Date().toISOString()
       })
-      .eq('id', existingItem.id);
+      .eq('id', existingCartItem.id);
       
     if (error) throw error;
   } else {
     // Insert new item
     const { error } = await supabase
-      .from('cart' as any)
+      .from('cart')
       .insert({
         user_id: user.id,
         product_id: product.id,
@@ -127,7 +172,7 @@ export const addToCart = async (product: Product, quantity: number, color: strin
 
 export const updateCartItemQuantity = async (cartItemId: string, quantity: number) => {
   const { error } = await supabase
-    .from('cart' as any)
+    .from('cart')
     .update({ quantity })
     .eq('id', cartItemId);
     
@@ -138,7 +183,7 @@ export const updateCartItemQuantity = async (cartItemId: string, quantity: numbe
 
 export const removeFromCart = async (cartItemId: string) => {
   const { error } = await supabase
-    .from('cart' as any)
+    .from('cart')
     .delete()
     .eq('id', cartItemId);
     
@@ -162,7 +207,7 @@ export const createOrder = async (orderData: {
   
   // Start a transaction
   const { data: order, error: orderError } = await supabase
-    .from('orders' as any)
+    .from('orders')
     .insert({
       user_id: user.id,
       total_amount: orderData.totalAmount,
@@ -175,13 +220,15 @@ export const createOrder = async (orderData: {
     
   if (orderError) throw orderError;
   
-  if (!order?.id) {
+  const orderResult = order as { id: string } | null;
+  
+  if (!orderResult?.id) {
     throw new Error('Failed to create order');
   }
   
   // Insert order items
   const orderItems = orderData.items.map(item => ({
-    order_id: order.id,
+    order_id: orderResult.id,
     product_id: item.product.id,
     quantity: item.quantity,
     unit_price: item.product.price,
@@ -189,20 +236,20 @@ export const createOrder = async (orderData: {
   }));
   
   const { error: itemsError } = await supabase
-    .from('order_items' as any)
+    .from('order_items')
     .insert(orderItems);
     
   if (itemsError) throw itemsError;
   
   // Clear the user's cart
   const { error: clearCartError } = await supabase
-    .from('cart' as any)
+    .from('cart')
     .delete()
     .eq('user_id', user.id);
     
   if (clearCartError) throw clearCartError;
   
-  return order;
+  return orderResult;
 };
 
 export const getUserOrders = async () => {
@@ -211,7 +258,7 @@ export const getUserOrders = async () => {
   if (!user) return [];
   
   const { data: orders, error } = await supabase
-    .from('orders' as any)
+    .from('orders')
     .select(`
       id,
       total_amount,
@@ -229,7 +276,7 @@ export const getUserOrders = async () => {
     return [];
   }
   
-  return orders || [];
+  return (orders as DatabaseOrder[]) || [];
 };
 
 export const getOrderDetails = async (orderId: string) => {
@@ -239,7 +286,7 @@ export const getOrderDetails = async (orderId: string) => {
   
   // Get order
   const { data: order, error: orderError } = await supabase
-    .from('orders' as any)
+    .from('orders')
     .select(`
       id,
       total_amount,
@@ -258,9 +305,11 @@ export const getOrderDetails = async (orderId: string) => {
     return null;
   }
   
+  const orderResult = order as DatabaseOrder | null;
+  
   // Get order items
   const { data: items, error: itemsError } = await supabase
-    .from('order_items' as any)
+    .from('order_items')
     .select(`
       id,
       quantity,
@@ -279,9 +328,11 @@ export const getOrderDetails = async (orderId: string) => {
     return null;
   }
   
+  if (!orderResult) return null;
+  
   return {
-    ...order,
-    items: items || []
+    ...orderResult,
+    items: (items as DatabaseOrderItem[]) || []
   };
 };
 
@@ -294,7 +345,7 @@ export const addProductReview = async (productId: string, orderId: string, ratin
   }
   
   const { data, error } = await supabase
-    .from('reviews' as any)
+    .from('reviews')
     .insert({
       user_id: user.id,
       product_id: productId,
@@ -307,12 +358,12 @@ export const addProductReview = async (productId: string, orderId: string, ratin
     
   if (error) throw error;
   
-  return data;
+  return data as { id: string } | null;
 };
 
 export const getProductReviews = async (productId: string) => {
   const { data, error } = await supabase
-    .from('reviews' as any)
+    .from('reviews')
     .select(`
       id,
       rating,
@@ -341,14 +392,16 @@ export const isUserAdmin = async () => {
   if (!user) return false;
   
   const { data, error } = await supabase
-    .from('user_profiles' as any)
+    .from('user_profiles')
     .select('role')
     .eq('id', user.id)
     .single();
     
   if (error || !data) return false;
   
-  return data.role === 'admin';
+  const profile = data as DatabaseUserProfile | null;
+  
+  return profile?.role === 'admin';
 };
 
 export const getAllOrders = async () => {
@@ -359,7 +412,7 @@ export const getAllOrders = async () => {
   }
   
   const { data, error } = await supabase
-    .from('orders' as any)
+    .from('orders')
     .select(`
       id,
       user_id,
@@ -381,7 +434,7 @@ export const getAllOrders = async () => {
     return [];
   }
   
-  return data || [];
+  return (data as DatabaseOrder[]) || [];
 };
 
 export const updateOrderStatus = async (orderId: string, status: string) => {
@@ -392,7 +445,7 @@ export const updateOrderStatus = async (orderId: string, status: string) => {
   }
   
   const { error } = await supabase
-    .from('orders' as any)
+    .from('orders')
     .update({ status })
     .eq('id', orderId);
     
