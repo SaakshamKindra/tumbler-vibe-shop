@@ -14,9 +14,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   
-  // Safe fallback for colors - handle undefined or empty arrays
-  const availableColor = product.colors?.find(color => color.available);
-  const defaultColor = availableColor?.name || product.colors?.[0]?.name || 'Default';
+  // Safely handle colors with robust fallbacks
+  const colorData = product.colors || [];
+  const availableColor = colorData.find(color => color?.available);
+  const defaultColor = availableColor?.name || colorData[0]?.name || 'Default';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -24,8 +25,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
     addToCart(product, 1, defaultColor);
   };
 
-  // Safe fallback for images
-  const productImage = product.images?.[0] || '/placeholder.svg';
+  // Safely handle product images with fallbacks
+  const productImage = product.images && product.images.length > 0 
+    ? product.images[0] 
+    : '/placeholder.svg';
+
+  // Safely handle product rating
+  const rating = typeof product.rating === 'number' ? product.rating : 0;
 
   return (
     <Link
@@ -97,7 +103,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <svg
                   key={i}
                   className={`w-3 h-3 ${
-                    i < Math.floor(product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'
+                    i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -107,7 +113,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-gray-500 ml-1">{(product.rating || 0).toFixed(1)}</span>
+            <span className="text-xs text-gray-500 ml-1">{rating.toFixed(1)}</span>
           </div>
         </div>
       </div>
