@@ -15,7 +15,7 @@ export const getUserCart = async () => {
   if (!user) return [];
   
   const { data, error } = await supabase
-    .from('cart')
+    .from('cart' as any)
     .select(`
       id,
       quantity,
@@ -36,7 +36,7 @@ export const getUserCart = async () => {
   }
   
   // Transform the data to match your existing CartItem format
-  return data.map(item => ({
+  return data.map((item: any) => ({
     product: {
       id: item.products.id,
       name: item.products.name,
@@ -76,7 +76,7 @@ export const addToCart = async (product: Product, quantity: number, color: strin
   
   // Check if product exists in cart
   const { data: existingItem } = await supabase
-    .from('cart')
+    .from('cart' as any)
     .select('*')
     .eq('user_id', user.id)
     .eq('product_id', product.id)
@@ -85,11 +85,11 @@ export const addToCart = async (product: Product, quantity: number, color: strin
   if (existingItem) {
     // Update quantity
     const { error } = await supabase
-      .from('cart')
+      .from('cart' as any)
       .update({ 
         quantity: existingItem.quantity + quantity,
         customization_data: customization,
-        updated_at: new Date()
+        updated_at: new Date().toISOString()
       })
       .eq('id', existingItem.id);
       
@@ -97,7 +97,7 @@ export const addToCart = async (product: Product, quantity: number, color: strin
   } else {
     // Insert new item
     const { error } = await supabase
-      .from('cart')
+      .from('cart' as any)
       .insert({
         user_id: user.id,
         product_id: product.id,
@@ -113,7 +113,7 @@ export const addToCart = async (product: Product, quantity: number, color: strin
 
 export const updateCartItemQuantity = async (cartItemId: string, quantity: number) => {
   const { error } = await supabase
-    .from('cart')
+    .from('cart' as any)
     .update({ quantity })
     .eq('id', cartItemId);
     
@@ -124,7 +124,7 @@ export const updateCartItemQuantity = async (cartItemId: string, quantity: numbe
 
 export const removeFromCart = async (cartItemId: string) => {
   const { error } = await supabase
-    .from('cart')
+    .from('cart' as any)
     .delete()
     .eq('id', cartItemId);
     
@@ -148,7 +148,7 @@ export const createOrder = async (orderData: {
   
   // Start a transaction
   const { data: order, error: orderError } = await supabase
-    .from('orders')
+    .from('orders' as any)
     .insert({
       user_id: user.id,
       total_amount: orderData.totalAmount,
@@ -171,14 +171,14 @@ export const createOrder = async (orderData: {
   }));
   
   const { error: itemsError } = await supabase
-    .from('order_items')
+    .from('order_items' as any)
     .insert(orderItems);
     
   if (itemsError) throw itemsError;
   
   // Clear the user's cart
   const { error: clearCartError } = await supabase
-    .from('cart')
+    .from('cart' as any)
     .delete()
     .eq('user_id', user.id);
     
@@ -193,7 +193,7 @@ export const getUserOrders = async () => {
   if (!user) return [];
   
   const { data: orders, error } = await supabase
-    .from('orders')
+    .from('orders' as any)
     .select(`
       id,
       total_amount,
@@ -221,7 +221,7 @@ export const getOrderDetails = async (orderId: string) => {
   
   // Get order
   const { data: order, error: orderError } = await supabase
-    .from('orders')
+    .from('orders' as any)
     .select(`
       id,
       total_amount,
@@ -242,7 +242,7 @@ export const getOrderDetails = async (orderId: string) => {
   
   // Get order items
   const { data: items, error: itemsError } = await supabase
-    .from('order_items')
+    .from('order_items' as any)
     .select(`
       id,
       quantity,
@@ -276,7 +276,7 @@ export const addProductReview = async (productId: string, orderId: string, ratin
   }
   
   const { data, error } = await supabase
-    .from('reviews')
+    .from('reviews' as any)
     .insert({
       user_id: user.id,
       product_id: productId,
@@ -294,7 +294,7 @@ export const addProductReview = async (productId: string, orderId: string, ratin
 
 export const getProductReviews = async (productId: string) => {
   const { data, error } = await supabase
-    .from('reviews')
+    .from('reviews' as any)
     .select(`
       id,
       rating,
@@ -323,7 +323,7 @@ export const isUserAdmin = async () => {
   if (!user) return false;
   
   const { data, error } = await supabase
-    .from('user_profiles')
+    .from('user_profiles' as any)
     .select('role')
     .eq('id', user.id)
     .single();
@@ -341,7 +341,7 @@ export const getAllOrders = async () => {
   }
   
   const { data, error } = await supabase
-    .from('orders')
+    .from('orders' as any)
     .select(`
       id,
       user_id,
@@ -374,7 +374,7 @@ export const updateOrderStatus = async (orderId: string, status: string) => {
   }
   
   const { error } = await supabase
-    .from('orders')
+    .from('orders' as any)
     .update({ status })
     .eq('id', orderId);
     

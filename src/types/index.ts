@@ -31,6 +31,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   color: string;
+  customization?: any;
 }
 
 export type CartContextType = {
