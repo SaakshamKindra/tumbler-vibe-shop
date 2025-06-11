@@ -1,6 +1,14 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { Product, CartItem } from '@/types';
+import { 
+  SupabaseProduct, 
+  UserProfile, 
+  CartItem as SupabaseCartItem, 
+  Order, 
+  OrderItem, 
+  Review 
+} from '@/types/supabase';
 
 // User related functions
 export const getCurrentUser = async () => {
@@ -35,14 +43,16 @@ export const getUserCart = async () => {
     return [];
   }
   
+  if (!data) return [];
+  
   // Transform the data to match your existing CartItem format
   return data.map((item: any) => ({
     product: {
-      id: item.products.id,
-      name: item.products.name,
-      price: parseFloat(item.products.price),
-      description: item.products.description,
-      images: [item.products.image_url],
+      id: item.products?.id || '',
+      name: item.products?.name || '',
+      price: parseFloat(item.products?.price || '0'),
+      description: item.products?.description || '',
+      images: [item.products?.image_url || ''],
       // Add other required fields with defaults
       features: [],
       specifications: {
@@ -61,10 +71,10 @@ export const getUserCart = async () => {
       rating: 0,
       inventory: 0
     },
-    quantity: item.quantity,
+    quantity: item.quantity || 0,
     color: 'Default',
-    customization: item.customization_data
-  }));
+    customization: item.customization_data || {}
+  })) as CartItem[];
 };
 
 export const addToCart = async (product: Product, quantity: number, color: string, customization = {}) => {
@@ -75,19 +85,23 @@ export const addToCart = async (product: Product, quantity: number, color: strin
   }
   
   // Check if product exists in cart
-  const { data: existingItem } = await supabase
+  const { data: existingItem, error: selectError } = await supabase
     .from('cart' as any)
-    .select('*')
+    .select('id, quantity')
     .eq('user_id', user.id)
     .eq('product_id', product.id)
     .single();
     
-  if (existingItem) {
+  if (selectError && selectError.code !== 'PGRST116') {
+    throw selectError;
+  }
+    
+  if (existingItem && existingItem.id) {
     // Update quantity
     const { error } = await supabase
       .from('cart' as any)
       .update({ 
-        quantity: existingItem.quantity + quantity,
+        quantity: (existingItem.quantity || 0) + quantity,
         customization_data: customization,
         updated_at: new Date().toISOString()
       })
@@ -156,10 +170,14 @@ export const createOrder = async (orderData: {
       payment_method: orderData.paymentMethod,
       status: 'pending'
     })
-    .select()
+    .select('id')
     .single();
     
   if (orderError) throw orderError;
+  
+  if (!order?.id) {
+    throw new Error('Failed to create order');
+  }
   
   // Insert order items
   const orderItems = orderData.items.map(item => ({
@@ -211,7 +229,7 @@ export const getUserOrders = async () => {
     return [];
   }
   
-  return orders;
+  return orders || [];
 };
 
 export const getOrderDetails = async (orderId: string) => {
@@ -263,7 +281,7 @@ export const getOrderDetails = async (orderId: string) => {
   
   return {
     ...order,
-    items
+    items: items || []
   };
 };
 
@@ -284,7 +302,7 @@ export const addProductReview = async (productId: string, orderId: string, ratin
       rating,
       comment
     })
-    .select()
+    .select('id')
     .single();
     
   if (error) throw error;
@@ -313,7 +331,7 @@ export const getProductReviews = async (productId: string) => {
     return [];
   }
   
-  return data;
+  return data || [];
 };
 
 // Admin functions
@@ -363,7 +381,7 @@ export const getAllOrders = async () => {
     return [];
   }
   
-  return data;
+  return data || [];
 };
 
 export const updateOrderStatus = async (orderId: string, status: string) => {
