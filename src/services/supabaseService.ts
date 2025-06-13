@@ -1,55 +1,16 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { Product, CartItem } from '@/types';
-
-// Define interfaces for database operations
-interface DatabaseCartItem {
-  id: string;
-  quantity: number;
-  customization_data: any;
-  products: {
-    id: string;
-    name: string;
-    price: number;
-    description: string;
-    image_url: string;
-  } | null;
-}
-
-interface DatabaseUserProfile {
-  id: string;
-  role: string;
-  first_name: string | null;
-  last_name: string | null;
-  email: string | null;
-}
-
-interface DatabaseOrder {
-  id: string;
-  total_amount: number;
-  status: string;
-  created_at: string;
-  payment_status: string;
-  payment_method: string;
-  shipping_address: any;
-  user_profiles?: {
-    first_name: string | null;
-    last_name: string | null;
-    email: string | null;
-  } | null;
-}
-
-interface DatabaseOrderItem {
-  id: string;
-  quantity: number;
-  unit_price: number;
-  customization_data: any;
-  products: {
-    id: string;
-    name: string;
-    image_url: string;
-  } | null;
-}
+import { 
+  DatabaseCart, 
+  DatabaseProduct, 
+  DatabaseProductImage,
+  DatabaseUserProfile, 
+  DatabaseOrder, 
+  DatabaseOrderItem,
+  DatabaseReview,
+  convertDatabaseProductToFrontend
+} from '@/types/supabase';
 
 // User related functions
 export const getCurrentUser = async () => {
@@ -58,24 +19,18 @@ export const getCurrentUser = async () => {
 };
 
 // Cart related functions
-export const getUserCart = async () => {
+export const getUserCart = async (): Promise<CartItem[]> => {
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return [];
   
-  const { data, error } = await supabase
+  const { data: cartData, error } = await supabase
     .from('cart')
     .select(`
       id,
       quantity,
       customization_data,
-      products:product_id (
-        id, 
-        name, 
-        price,
-        description,
-        image_url
-      )
+      product_id
     `)
     .eq('user_id', user.id);
     
@@ -84,40 +39,58 @@ export const getUserCart = async () => {
     return [];
   }
   
-  if (!data) return [];
+  if (!cartData || cartData.length === 0) return [];
   
-  // Transform the data to match your existing CartItem format
-  const cartData = data as DatabaseCartItem[];
+  // Get product details for each cart item
+  const productIds = cartData.map(item => item.product_id);
   
-  return cartData.map((item) => ({
-    product: {
-      id: item.products?.id || '',
-      name: item.products?.name || '',
-      price: parseFloat(String(item.products?.price || '0')),
-      description: item.products?.description || '',
-      images: [item.products?.image_url || ''],
-      // Add other required fields with defaults
-      features: [],
-      specifications: {
-        capacity: '',
-        material: '',
-        dimensions: '',
-        weight: '',
-        insulation: '',
-        lidType: ''
-      },
-      colors: [{ name: 'Default', hex: '#000000', available: true }],
-      category: '',
-      tags: [],
-      isNew: false,
-      bestSeller: false,
-      rating: 0,
-      inventory: 0
-    },
-    quantity: item.quantity || 0,
-    color: 'Default',
-    customization: item.customization_data || {}
-  })) as CartItem[];
+  const { data: productsData, error: productsError } = await supabase
+    .from('products')
+    .select(`
+      id,
+      name,
+      price,
+      description,
+      best_seller,
+      is_new,
+      rating,
+      inventory,
+      category_id
+    `)
+    .in('id', productIds);
+    
+  if (productsError) {
+    console.error('Error fetching products:', productsError);
+    return [];
+  }
+  
+  // Get product images
+  const { data: imagesData } = await supabase
+    .from('product_images')
+    .select('product_id, url, display_order')
+    .in('product_id', productIds)
+    .order('display_order');
+  
+  const cartItems: CartItem[] = cartData.map((cartItem) => {
+    const dbProduct = productsData?.find(p => p.id === cartItem.product_id);
+    const productImages = imagesData?.filter(img => img.product_id === cartItem.product_id) || [];
+    
+    if (!dbProduct) {
+      console.warn(`Product not found for cart item: ${cartItem.product_id}`);
+      return null;
+    }
+    
+    const product = convertDatabaseProductToFrontend(dbProduct as DatabaseProduct, productImages as DatabaseProductImage[]);
+    
+    return {
+      product,
+      quantity: cartItem.quantity || 0,
+      color: 'Default',
+      customization: cartItem.customization_data || {}
+    };
+  }).filter(Boolean) as CartItem[];
+  
+  return cartItems;
 };
 
 export const addToCart = async (product: Product, quantity: number, color: string, customization = {}) => {
@@ -127,30 +100,37 @@ export const addToCart = async (product: Product, quantity: number, color: strin
     throw new Error('User must be logged in to add to cart');
   }
   
+  // Convert frontend product ID to UUID format - we need to find the actual UUID
+  const { data: productMapping } = await supabase
+    .from('product_id_map')
+    .select('uuid_id')
+    .eq('legacy_id', product.id)
+    .single();
+    
+  const productId = productMapping?.uuid_id || String(product.id);
+  
   // Check if product exists in cart
   const { data: existingItem, error: selectError } = await supabase
     .from('cart')
     .select('id, quantity')
     .eq('user_id', user.id)
-    .eq('product_id', product.id)
-    .single();
+    .eq('product_id', productId)
+    .maybeSingle();
     
-  if (selectError && selectError.code !== 'PGRST116') {
+  if (selectError) {
     throw selectError;
   }
     
-  const existingCartItem = existingItem as { id: string; quantity: number } | null;
-    
-  if (existingCartItem?.id) {
+  if (existingItem?.id) {
     // Update quantity
     const { error } = await supabase
       .from('cart')
       .update({ 
-        quantity: (existingCartItem.quantity || 0) + quantity,
+        quantity: (existingItem.quantity || 0) + quantity,
         customization_data: customization,
         updated_at: new Date().toISOString()
       })
-      .eq('id', existingCartItem.id);
+      .eq('id', existingItem.id);
       
     if (error) throw error;
   } else {
@@ -159,7 +139,7 @@ export const addToCart = async (product: Product, quantity: number, color: strin
       .from('cart')
       .insert({
         user_id: user.id,
-        product_id: product.id,
+        product_id: productId,
         quantity,
         customization_data: customization
       });
@@ -220,20 +200,31 @@ export const createOrder = async (orderData: {
     
   if (orderError) throw orderError;
   
-  const orderResult = order as { id: string } | null;
-  
-  if (!orderResult?.id) {
+  if (!order?.id) {
     throw new Error('Failed to create order');
   }
   
-  // Insert order items
-  const orderItems = orderData.items.map(item => ({
-    order_id: orderResult.id,
-    product_id: item.product.id,
-    quantity: item.quantity,
-    unit_price: item.product.price,
-    customization_data: item.customization || {}
-  }));
+  // Convert product IDs for order items
+  const orderItems = await Promise.all(
+    orderData.items.map(async (item) => {
+      // Find the UUID for this product
+      const { data: productMapping } = await supabase
+        .from('product_id_map')
+        .select('uuid_id')
+        .eq('legacy_id', item.product.id)
+        .single();
+        
+      const productId = productMapping?.uuid_id || String(item.product.id);
+      
+      return {
+        order_id: order.id,
+        product_id: productId,
+        quantity: item.quantity,
+        unit_price: item.product.price,
+        customization_data: item.customization || {}
+      };
+    })
+  );
   
   const { error: itemsError } = await supabase
     .from('order_items')
@@ -249,10 +240,10 @@ export const createOrder = async (orderData: {
     
   if (clearCartError) throw clearCartError;
   
-  return orderResult;
+  return order;
 };
 
-export const getUserOrders = async () => {
+export const getUserOrders = async (): Promise<DatabaseOrder[]> => {
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return [];
@@ -305,21 +296,15 @@ export const getOrderDetails = async (orderId: string) => {
     return null;
   }
   
-  const orderResult = order as DatabaseOrder | null;
-  
-  // Get order items
-  const { data: items, error: itemsError } = await supabase
+  // Get order items with product details
+  const { data: orderItems, error: itemsError } = await supabase
     .from('order_items')
     .select(`
       id,
       quantity,
       unit_price,
       customization_data,
-      products:product_id (
-        id,
-        name,
-        image_url
-      )
+      product_id
     `)
     .eq('order_id', orderId);
     
@@ -328,11 +313,39 @@ export const getOrderDetails = async (orderId: string) => {
     return null;
   }
   
-  if (!orderResult) return null;
+  // Get product details for order items
+  if (orderItems && orderItems.length > 0) {
+    const productIds = orderItems.map(item => item.product_id);
+    
+    const { data: productsData } = await supabase
+      .from('products')
+      .select('id, name')
+      .in('id', productIds);
+    
+    const { data: imagesData } = await supabase
+      .from('product_images')
+      .select('product_id, url')
+      .in('product_id', productIds)
+      .eq('display_order', 0);
+    
+    const enrichedItems = orderItems.map(item => ({
+      ...item,
+      products: {
+        id: item.product_id,
+        name: productsData?.find(p => p.id === item.product_id)?.name || 'Unknown Product',
+        image_url: imagesData?.find(img => img.product_id === item.product_id)?.url || ''
+      }
+    }));
+    
+    return {
+      ...(order as DatabaseOrder),
+      items: enrichedItems as DatabaseOrderItem[]
+    };
+  }
   
   return {
-    ...orderResult,
-    items: (items as DatabaseOrderItem[]) || []
+    ...(order as DatabaseOrder),
+    items: []
   };
 };
 
@@ -358,7 +371,7 @@ export const addProductReview = async (productId: string, orderId: string, ratin
     
   if (error) throw error;
   
-  return data as { id: string } | null;
+  return data;
 };
 
 export const getProductReviews = async (productId: string) => {
@@ -369,10 +382,7 @@ export const getProductReviews = async (productId: string) => {
       rating,
       comment,
       created_at,
-      user_profiles:user_id (
-        first_name,
-        last_name
-      )
+      user_id
     `)
     .eq('product_id', productId)
     .order('created_at', { ascending: false });
@@ -382,11 +392,26 @@ export const getProductReviews = async (productId: string) => {
     return [];
   }
   
+  // Get user profile data for reviews
+  if (data && data.length > 0) {
+    const userIds = data.map(review => review.user_id);
+    
+    const { data: profilesData } = await supabase
+      .from('user_profiles')
+      .select('id, first_name, last_name')
+      .in('id', userIds);
+    
+    return data.map(review => ({
+      ...review,
+      user_profiles: profilesData?.find(profile => profile.id === review.user_id) || null
+    }));
+  }
+  
   return data || [];
 };
 
 // Admin functions
-export const isUserAdmin = async () => {
+export const isUserAdmin = async (): Promise<boolean> => {
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return false;
@@ -399,12 +424,12 @@ export const isUserAdmin = async () => {
     
   if (error || !data) return false;
   
-  const profile = data as DatabaseUserProfile | null;
+  const profile = data as DatabaseUserProfile;
   
   return profile?.role === 'admin';
 };
 
-export const getAllOrders = async () => {
+export const getAllOrders = async (): Promise<DatabaseOrder[]> => {
   const isAdmin = await isUserAdmin();
   
   if (!isAdmin) {
@@ -420,18 +445,29 @@ export const getAllOrders = async () => {
       status,
       created_at,
       payment_status,
-      shipping_address,
-      user_profiles:user_id (
-        first_name,
-        last_name,
-        email
-      )
+      payment_method,
+      shipping_address
     `)
     .order('created_at', { ascending: false });
     
   if (error) {
     console.error('Error fetching orders:', error);
     return [];
+  }
+  
+  // Get user profile data for orders
+  if (data && data.length > 0) {
+    const userIds = data.map(order => order.user_id);
+    
+    const { data: profilesData } = await supabase
+      .from('user_profiles')
+      .select('id, first_name, last_name, email')
+      .in('id', userIds);
+    
+    return data.map(order => ({
+      ...order,
+      user_profiles: profilesData?.find(profile => profile.id === order.user_id) || null
+    })) as DatabaseOrder[];
   }
   
   return (data as DatabaseOrder[]) || [];
